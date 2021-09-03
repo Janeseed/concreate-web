@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SwatchesPicker, CirclePicker } from 'react-color';
 
-import { PolotnoContainer, SidePanelWrap, WorkspaceWrap} from 'polotno';
+import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
 import { SectionTab, SidePanel } from 'polotno/side-panel';
 import Workspace from 'polotno/canvas/workspace';
 import { createStore } from 'polotno/model/store';
@@ -20,10 +20,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      brandPersonalityKeywords: ['Fancy', 'Young', 'Playful'],
       backgroundColor: '#ffffff',
       titleStyle: {
         // default value of text inputs
-        type:'text',
+        type: 'text',
         x: 100,
         y: 100,
         text: 'Type Header Here',
@@ -37,7 +38,7 @@ class App extends React.Component {
       },
       bodyStyle: {
         // default value of text inputs
-        type:'text',
+        type: 'text',
         x: 100,
         y: 300,
         text: 'Type body text Here dummy dummy',
@@ -84,8 +85,8 @@ class App extends React.Component {
         </SectionTab>
       ),
       // we need observer to update component automatically on any store changes
-      Panel: observer(({store}) => {
-        return(
+      Panel: observer(({ store }) => {
+        return (
           <div>
             <div className='BPSection'>
               <h2>Brand Personality</h2>
@@ -96,20 +97,20 @@ class App extends React.Component {
             </div>
             <div className='textSection'>
               <h2>Text</h2>
-              <ButtonGroup style={{minWidth: 200}} vertical={true} alignText={'center'}>
+              <ButtonGroup style={{ minWidth: 200 }} vertical={true} alignText={'center'}>
                 <Button
                   onClick={() => {
                     store.activePage?.addElement(this.state.titleStyle);
                   }}
-                  className = 'text-header'
-                >               
+                  className='text-header'
+                >
                   Create Header
                 </Button>
                 <Button
                   onClick={() => {
                     store.activePage?.addElement(this.state.bodyStyle);
                   }}
-                  className = 'text-body'
+                  className='text-body'
                 >
                   Create Body Text
                 </Button>
@@ -157,7 +158,7 @@ class App extends React.Component {
           <SidePanel store={store} sections={sections} defaultSection="custom" />
         </SidePanelWrap>
         <WorkspaceWrap>
-          <Toolbar store={store} dwonloadButtonEnabled hideTextEffects={false} hideOpacity={true}/>
+          <Toolbar store={store} dwonloadButtonEnabled hideTextEffects={false} hideOpacity={true} />
           <Workspace store={store} />
         </WorkspaceWrap>
       </PolotnoContainer>
