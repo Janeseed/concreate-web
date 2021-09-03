@@ -5,6 +5,13 @@ import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SwatchesPicker, CirclePicker } from 'react-color';
 
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
+import {
+  TextSection,
+  PhotosSection,
+  ElementsSection,
+  UploadSection,
+  BackgroundSection,
+} from 'polotno/side-panel';
 import { SectionTab, SidePanel } from 'polotno/side-panel';
 import Workspace from 'polotno/canvas/workspace';
 import { createStore } from 'polotno/model/store';
@@ -12,6 +19,7 @@ import { Toolbar } from 'polotno/toolbar/toolbar';
 
 //import parts of UIs
 import { AiSection } from './aisection';
+// import './shapeElements';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
@@ -140,9 +148,16 @@ class App extends React.Component {
             <div className='motif-section'>
               <h2>Graphic Motifs</h2>
             </div>
-            <div className='shapes-section'>
+            {/* <div className='shapes-section'>
               <h2>Basic Shapes</h2>
-            </div>
+              <Button 
+                onClick = {store.activePage?.addElement({
+                  type: 'star',
+                  radius: 100,
+                  fill: 'red',
+                })}
+              />
+            </div> */}
           </div>
         );
       }),
@@ -150,7 +165,7 @@ class App extends React.Component {
 
 
     //section을 지정해주는 곳
-    const sections = [CustomSection, AiSection];
+    const sections = [CustomSection, ElementsSection, AiSection];
 
     return (
       <PolotnoContainer className="polotno-app-container">

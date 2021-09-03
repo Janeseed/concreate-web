@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 // polotno is made with mobx library
 // we will need its tools to make reactive components
 import { observer } from 'mobx-react-lite';
@@ -13,8 +12,8 @@ import { useSnap } from 'polotno/canvas/use-snap';
 // we need to provide all default values
 unstable_registerShapeModel({
   type: 'rect',
-  innerWidth: 100,
-  innerHeight: 100,
+  width: 100,
+  height: 100,
   fill: '#0f0f0f',
 });
 
@@ -22,7 +21,7 @@ export const RectElement = observer(({element, store}) => {
   const ref = React.useRef(null);
   // useSnap - is utility hook that automatically enables snapping
   const { onDragMove, onDragEnd } = useSnap(ref);
-  
+
   const handleChange = (e) => {
     const node = e.currentTarget;
     const scaleX = node.scaleX();
@@ -63,6 +62,7 @@ unstable_registerTransformerAttrs('rect', {
   enabledAnchors: ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'],
 });
 
+/*
 // now we can define custom toolbar
 const LineToolbar = observer(({ store }) => {
   const element = store.selectedElements[0];
@@ -92,3 +92,4 @@ const LineToolbar = observer(({ store }) => {
 });
 
 unstable_registerShapeComponent('rect', LineToolbar);
+*/
