@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@meronex/icons": "^4.0.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "mobx-react-lite": "^3.2.0",
+    "polotno": "^0.27.0",
     "react": "^17.0.2",
+    "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
+    "react-konva": "^17.0.2-5",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
   },
