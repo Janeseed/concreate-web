@@ -19,7 +19,6 @@ import { Toolbar } from 'polotno/toolbar/toolbar';
 
 //import parts of UIs
 import { AiSection } from './aisection';
-// import './shapeElements';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
@@ -61,6 +60,46 @@ class App extends React.Component {
       primaryColor: ['#B80000', '#DB3E00', "#FCCB00", '#008B02', '#006B76'],
       secondaryColor: ['#FCDC00', '#DBDF00', '#A4DD00', '#68CCCA'],
       neutralColor: ['#3D3D3D', '#0f0f0f'],
+      logo: {
+        type: 'svg',
+        src: '../public/vocali_logo.svg',
+        maskSrc: '', // should we draw mask image over svg element?
+        keepRatio: false, // can we change aspect ration of svg?
+        x: 0,
+        y: 0,
+        rotation: 0,
+        locked: false,
+        blurEnabled: false,
+        blurRadius: 0,
+        brightnessEnabled: false,
+        brightness: 0,
+        shadowEnabled: false,
+        shadowBlur: 0,
+        width: 100,
+        height: 100,
+        flipX: false,
+        flipY: false,
+      },
+      graphicMotif: {
+        type: 'svg',
+        src: '../public/motif_example.svg',
+        maskSrc: '', // should we draw mask image over svg element?
+        keepRatio: false, // can we change aspect ration of svg?
+        x: 0,
+        y: 0,
+        rotation: 0,
+        locked: false,
+        blurEnabled: false,
+        blurRadius: 0,
+        brightnessEnabled: false,
+        brightness: 0,
+        shadowEnabled: false,
+        shadowBlur: 0,
+        width: 100,
+        height: 100,
+        flipX: false,
+        flipY: false,
+      },
     };
     this.store = createStore({
       key: 'RVVmbQODqrPZUXq1u5AN', // you can create it here: https://polotno.dev/cabinet/
@@ -71,6 +110,14 @@ class App extends React.Component {
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
   }
+
+  handleOnClickLogo = () => {
+    this.store.activePage?.addElement(this.state.logo);
+  };
+
+  handleOnClickMotif = () => {
+    this.store.activePage?.addElement(this.state.graphicMotif);
+  };
 
   handleBackColorChange = (color) => {
     this.setState({
@@ -88,7 +135,7 @@ class App extends React.Component {
     const CustomSection = {
       name: 'custom',
       Tab: (props) => (
-        <SectionTab name="Palette" {...props}>
+        <SectionTab name="Brand Palette" {...props}>
           <BiPalette icon="new-text-box" />
         </SectionTab>
       ),
@@ -126,27 +173,38 @@ class App extends React.Component {
             </div>
             <div className='background-section'>
               <h2>Background Color</h2>
-              <CirclePicker
-                colors={this.state.primaryColor}
-                circleSpacing={7}
-                onChangeComplete={this.handleBackColorChange}
-              />
-              <CirclePicker
-                colors={this.state.secondaryColor}
-                circleSpacing={7}
-                onChangeComplete={this.handleBackColorChange}
-              />
-              <CirclePicker
-                colors={this.state.neutralColor}
-                circleSpacing={7}
-                onChangeComplete={this.handleBackColorChange}
-              />
+              <div>
+                <p>Primary Color</p>
+                <CirclePicker
+                  colors={this.state.primaryColor}
+                  circleSpacing={7}
+                  onChangeComplete={this.handleBackColorChange}
+                />
+              </div>
+              <div>
+                <p>Secondary Color</p>
+                <CirclePicker
+                  colors={this.state.secondaryColor}
+                  circleSpacing={7}
+                  onChangeComplete={this.handleBackColorChange}
+                />
+              </div>
+              <div>
+                <p>Neutral Color</p>
+                <CirclePicker
+                  colors={this.state.neutralColor}
+                  circleSpacing={7}
+                  onChangeComplete={this.handleBackColorChange}
+                />
+              </div>
             </div>
             <div className='logo-section'>
               <h2>Logo</h2>
+              <Button onClick={this.handleOnClickLogo} />
             </div>
             <div className='motif-section'>
               <h2>Graphic Motifs</h2>
+              <Button onClick={this.handleOnClickMotif} />
             </div>
             {/* <div className='shapes-section'>
               <h2>Basic Shapes</h2>
