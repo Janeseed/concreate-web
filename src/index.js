@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SwatchesPicker, CirclePicker } from 'react-color';
-import socketIOClient from 'socket.io-client'
-import fs from 'fs';
-import path from 'path';
-
+import io from 'socket.io-client'
+//import polotno libraries
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
 import {
   TextSection,
@@ -19,12 +17,24 @@ import { SectionTab, SidePanel } from 'polotno/side-panel';
 import Workspace from 'polotno/canvas/workspace';
 import { createStore } from 'polotno/model/store';
 import { Toolbar } from 'polotno/toolbar/toolbar';
+import { setGoogleFonts } from 'polotno/config';
 
 //import parts of UIs
 import { AiSection } from './aisection';
+import logo from './index.css';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
+import './vocali_logo.svg';
+
+const socket = io.connect('http://143.248.250.173:3002');
+const json = [];
+
+socket.on('toBack', data => {
+  console.log(data);
+  json.push(data);
+  console.log('successfully get json data');
+}); 
 
 class App extends React.Component {
   constructor(props) {
@@ -37,32 +47,32 @@ class App extends React.Component {
         type: 'text',
         x: 100,
         y: 100,
-        text: 'Type Header Here',
-        fontSize: 72,
-        fontFamily: 'Roboto',
+        text: '키위커피 타이틀 입력',
+        fontSize: 102,
+        fontFamily: 'Cafe24SsurroundAir',
         fontStyle: 'normal', // can be normal or italic
         fontWeight: 'bold', // can be normal or bold or some other CSS variations
-        fill: 'red',
+        fill: '#005508',
         align: 'left',
-        width: 500,
+        width: 700,
       },
       bodyStyle: {
         // default value of text inputs
         type: 'text',
         x: 100,
-        y: 300,
-        text: 'Type body text Here dummy dummy',
-        fontSize: 32,
-        fontFamily: 'Roboto',
+        y: 350,
+        text: '입력할 내용을 작성하세요.',
+        fontSize: 52,
+        fontFamily: 'Cafe24SsurroundAir',
         fontStyle: 'normal', // can be normal or italic
         fontWeight: 'normal', // can be normal or bold or some other CSS variations
         fill: 'black',
         align: 'left',
         width: 700,
       },
-      primaryColor: ['#B80000', '#DB3E00', "#FCCB00", '#008B02', '#006B76'],
-      secondaryColor: ['#FCDC00', '#DBDF00', '#A4DD00', '#68CCCA'],
-      neutralColor: ['#ffffff','#3D3D3D', '#000000'],
+      primaryColor: ['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB'],
+      secondaryColor: ['#FFB800', '#FF2525', '#614600'],
+      neutralColor: ['#ffffff','#bfbfbf','#808080', '#404040', '#000000'],
       logo: {
         type: 'svg',
         src: 'https://s.cdpn.io/3/kiwi.svg', //relative path 면 안되는 이유가 뭐지? 클라이언트에 같이 보여지는게 아니라서..?
@@ -112,7 +122,10 @@ class App extends React.Component {
     });
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
-    this.socket = socketIOClient.connect('http://143.248.250.173:3002');
+    this.store.addFont({
+      fontFamily: 'ghanachoco',
+      url: 'https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ghanachoco.woff',
+    });
   }
 
   handleOnClickLogo = () => {
@@ -127,21 +140,26 @@ class App extends React.Component {
     this.setState({
       backgroundColor: color.hex,
     });
-    this.page.set({
+    this.store.activePage?.set({
       background: this.state.backgroundColor
     });
   };
 
   handleSocketio = (store) => {
     const json = store.toJSON();
-    this.socket.emit('save', JSON.stringify(json));
+    socket.emit('save', JSON.stringify(json));
   };
 
   handleLoad = (store) => {
+    const clientWork = JSON.parse(json[0]);
+    store.loadJSON(clientWork, true);
   };
 
   render() {
     const store = this.store;
+
+    //set the fonts here
+    setGoogleFonts([]);
 
     //Palette Section Panel
     const CustomSection = {
