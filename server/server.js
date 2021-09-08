@@ -20,11 +20,6 @@ var io = require('socket.io')(server,{
 io.on('connection', socket =>{
   console.log("New client connected");
   socket.on('save', data => {
-    fs.writeFile('./src/polotno.json', data, (err) => {
-      if (err) throw err;
-      console.log('Data written to file');
-    });
-    console.log('Successfully Download');
     io.emit('toBack', data);
     console.log('emit the saved json to client')
   });
