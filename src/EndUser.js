@@ -26,7 +26,9 @@ import myFonts from './fonts';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
-import './vocali_logo.svg';
+
+const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
+const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
 const socket = io.connect('http://143.248.250.173:3002');
 const json = [];
@@ -104,7 +106,7 @@ class EndUser extends React.Component {
       neutralColor: ['#ffffff','#bfbfbf','#808080', '#404040', '#000000'],
       logo: {
         type: 'svg',
-        src: 'https://s.cdpn.io/3/kiwi.svg', //relative path 면 안되는 이유가 뭐지? 클라이언트에 같이 보여지는게 아니라서..?
+        src: logoUrl, //relative path 면 안되는 이유가 뭐지? 클라이언트에 같이 보여지는게 아니라서..?
         maskSrc: '', // should we draw mask image over svg element?
         keepRatio: false, // can we change aspect ration of svg?
         x: 0,
@@ -124,7 +126,7 @@ class EndUser extends React.Component {
       },
       graphicMotif: {
         type: 'svg',
-        src: 'https://s.cdpn.io/3/kiwi.svg',
+        src: motifUrl,
         maskSrc: '', // should we draw mask image over svg element?
         keepRatio: false, // can we change aspect ration of svg?
         x: 0,
