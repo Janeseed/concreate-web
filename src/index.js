@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SwatchesPicker, CirclePicker } from 'react-color';
+import socketIOClient from 'socket.io-client'
+import fs from 'fs';
+import path from 'path';
 
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
 import {
@@ -59,10 +62,10 @@ class App extends React.Component {
       },
       primaryColor: ['#B80000', '#DB3E00', "#FCCB00", '#008B02', '#006B76'],
       secondaryColor: ['#FCDC00', '#DBDF00', '#A4DD00', '#68CCCA'],
-      neutralColor: ['#3D3D3D', '#0f0f0f'],
+      neutralColor: ['#ffffff','#3D3D3D', '#000000'],
       logo: {
         type: 'svg',
-        src: '../public/vocali_logo.svg',
+        src: 'https://s.cdpn.io/3/kiwi.svg', //relative path 면 안되는 이유가 뭐지? 클라이언트에 같이 보여지는게 아니라서..?
         maskSrc: '', // should we draw mask image over svg element?
         keepRatio: false, // can we change aspect ration of svg?
         x: 0,
@@ -82,7 +85,7 @@ class App extends React.Component {
       },
       graphicMotif: {
         type: 'svg',
-        src: '../public/motif_example.svg',
+        src: 'https://s.cdpn.io/3/kiwi.svg',
         maskSrc: '', // should we draw mask image over svg element?
         keepRatio: false, // can we change aspect ration of svg?
         x: 0,
@@ -109,6 +112,7 @@ class App extends React.Component {
     });
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
+    this.socket = socketIOClient.connect('http://143.248.250.173:3002');
   }
 
   handleOnClickLogo = () => {
@@ -126,6 +130,14 @@ class App extends React.Component {
     this.page.set({
       background: this.state.backgroundColor
     });
+  };
+
+  handleSocketio = (store) => {
+    const json = store.toJSON();
+    this.socket.emit('save', JSON.stringify(json));
+  };
+
+  handleLoad = (store) => {
   };
 
   render() {
@@ -206,22 +218,19 @@ class App extends React.Component {
               <h2>Graphic Motifs</h2>
               <Button onClick={this.handleOnClickMotif} />
             </div>
-            {/* <div className='shapes-section'>
-              <h2>Basic Shapes</h2>
-              <Button 
-                onClick = {store.activePage?.addElement({
-                  type: 'star',
-                  radius: 100,
-                  fill: 'red',
-                })}
-              />
-            </div> */}
+            <div>
+              <h2>Estimate the Result</h2>
+              <Button onClick={() => {this.handleSocketio(store)}}>
+                Save
+              </Button>
+              <Button onClick={() => {this.handleLoad(store)}}>
+                Load
+              </Button>
+            </div>
           </div>
         );
       }),
     };
-
-
     //section을 지정해주는 곳
     const sections = [CustomSection, ElementsSection, AiSection];
 
