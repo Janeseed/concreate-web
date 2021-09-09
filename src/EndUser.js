@@ -28,6 +28,7 @@ import myFonts from './fonts';
 import BiPalette from '@meronex/icons/bi/BiPalette';
 import FaCompass from '@meronex/icons/fa/FaCompass';
 
+//import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
@@ -46,8 +47,6 @@ socket.on('sendJson', data => {
   jsonFromDesigner = data;
   console.log('get json from designer')
 });
-
-const url = [];
 
 class EndUser extends React.Component {
   constructor(props) {
@@ -347,7 +346,8 @@ class EndUser extends React.Component {
     });
 
     //section을 지정해주는 곳
-    const sections = [CustomSection, ElementsSection, AiSection];
+    const sections = [CustomSection, ElementsSection];
+    const estimateSections = [AiSection];
 
     return (
       <PolotnoContainer className="polotno-app-container">
@@ -356,8 +356,11 @@ class EndUser extends React.Component {
         </SidePanelWrap>
         <WorkspaceWrap>
           <Toolbar store={store} dwonloadButtonEnabled hideTextEffects={false} hideOpacity={true} />
-          <Workspace store={store} />
+          <Workspace store={store} pageControlsEnabled={false}/>
         </WorkspaceWrap>
+        <SidePanelWrap>
+          <SidePanel store={store} sections={estimateSections} defaultSection='estimate'/>
+        </SidePanelWrap>
       </PolotnoContainer>
     );
   }

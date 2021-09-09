@@ -31,6 +31,7 @@ import FaCompass from '@meronex/icons/fa/FaCompass';
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
+//import svg urls
 const socket = io.connect('http://143.248.250.173:3002');
 const json = [];
 
@@ -345,7 +346,8 @@ class DesignerSide extends React.Component {
     });
 
     //section을 지정해주는 곳
-    const sections = [CustomSection, ElementsSection, AiSection];
+    const sections = [CustomSection, ElementsSection];
+    const estimateSections = [AiSection];
 
     return (
       <PolotnoContainer className="polotno-app-container">
@@ -354,8 +356,11 @@ class DesignerSide extends React.Component {
         </SidePanelWrap>
         <WorkspaceWrap>
           <Toolbar store={store} dwonloadButtonEnabled hideTextEffects={false} hideOpacity={true} />
-          <Workspace store={store} />
+          <Workspace store={store} pageControlsEnabled={false}/>
         </WorkspaceWrap>
+        <SidePanelWrap>
+          <SidePanel store={store} sections={estimateSections} defaultSection='estimate'/>
+        </SidePanelWrap>
       </PolotnoContainer>
     );
   }
