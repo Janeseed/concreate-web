@@ -31,14 +31,17 @@ import FaCompass from '@meronex/icons/fa/FaCompass';
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
-const socket = io.connect('http://143.248.250.173:3002');
+const socket = io.connect('http://143.248.250.206:3002');
 const json = [];
 
 socket.on('toBack', data => {
   console.log(data);
   json.push(data);
   console.log('successfully get json data');
-}); 
+});
+
+var jsonForUser = [];
+var jsonImgForUser = [];
 
 class DesignerSide extends React.Component {
   constructor(props) {
@@ -182,7 +185,7 @@ class DesignerSide extends React.Component {
     const clientWork = JSON.parse(json[0]);
     store.loadJSON(clientWork, true);
   };
-  
+
   addMyFonts = (fontObject) => {
     this.store.addFont(fontObject);
   };
@@ -310,18 +313,37 @@ class DesignerSide extends React.Component {
       Panel: observer(({store}) => {
         return(
           <div>
-            <h2>Recommandation</h2>
-            <img className='previewImage'
-            width='200'
-            height='200'
-            //소스 이미지 여기로 넣는 것 맞나요
-            src = {this.state.imgSrcURL}
-            />
+          <h2>File</h2>
+            <Button onClick={() => {
+              socket.emit('requestJson');
+              }}
+            >
+              Get
+            </Button>
+            <Button onClick={() => {
+              const sendJson = store.toJSON();
+
+              const maxWidth = 200;
+              const scale = maxWidth / store.width;
+              const imageBase64 = store.toDataURL({ pixelRatio: scale });
+
+              socket.emit('sendJson', sendJson);
+              socket.emit('sendDataURL', imageBase64);
+              console.log(imageBase64)
+              }}
+            >
+              Send
+            </Button>
           </div>
         );
       }),
     };
-    
+
+    socket.on('requestedJson', data => {
+      store.loadJSON(data);
+      console.log('requestedJson')
+    });
+
     //section을 지정해주는 곳
     const sections = [CustomSection, ElementsSection, AiSection];
 

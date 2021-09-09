@@ -23,4 +23,20 @@ io.on('connection', socket =>{
     io.emit('toBack', data);
     console.log('emit the saved json to client')
   });
+  socket.on('requestJson', data => {
+  io.emit('requestJson', data);
+  console.log('requestJson')
+  });
+  socket.on('requestedJson', data => {
+    io.emit('requestedJson', data);
+    console.log('requestedJson')
+  });
+  socket.on('sendJson', data => {
+    io.emit('sendJson', data);
+    console.log('sendJson')
+  });
+  socket.on('sendDataURL', data => {
+    io.emit('sendDataURL', data);
+    console.log('sendDataURL')
+  });
 })

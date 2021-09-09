@@ -31,7 +31,7 @@ import FaCompass from '@meronex/icons/fa/FaCompass';
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
-const socket = io.connect('http://143.248.250.173:3002');
+const socket = io.connect('http://143.248.250.206:3002');
 const json = [];
 
 socket.on('toBack', data => {
@@ -44,15 +44,10 @@ var jsonFromDesigner;
 socket.on('sendJson', data => {
   // store.loadJSON(data);
   jsonFromDesigner = data;
-  console.log('sendJson')
+  console.log('get json from designer')
 });
 
 const url = [];
-
-socket.on('sendDataURL', data => {
-  url.push(data);
-  console.log('sendDataURL')
-});
 
 class EndUser extends React.Component {
   constructor(props) {
@@ -197,16 +192,9 @@ class EndUser extends React.Component {
     const clientWork = JSON.parse(json[0]);
     store.loadJSON(clientWork, true);
   };
-  
+
   addMyFonts = (fontObject) => {
     this.store.addFont(fontObject);
-  };
-
-  componentDidMount() {
-    const scrURL = url[0]; 
-    this.setState({
-      imgSrcURL: scrURL,
-    });
   };
 
   render() {
@@ -338,12 +326,26 @@ class EndUser extends React.Component {
             height='200'
             //소스 이미지 여기로 넣는 것 맞나요
             src = {this.state.imgSrcURL}
+            onClick={() => store.loadJSON(jsonFromDesigner)}
             />
           </div>
         );
       }),
     };
-    
+
+    socket.on('requestJson', data => {
+      console.log('requestJson')
+      const requestedJson = store.toJSON();
+      socket.emit('requestedJson', requestedJson);
+    });
+
+    socket.on('sendDataURL', data => {
+      this.setState({
+        imgSrcURL: data,
+      });
+      console.log('get dataURL from designer')
+    });
+
     //section을 지정해주는 곳
     const sections = [CustomSection, ElementsSection, AiSection];
 
