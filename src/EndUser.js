@@ -299,7 +299,7 @@ class EndUser extends React.Component {
     };
     
     //section을 지정해주는 곳
-    const sections = [CustomSection, ElementsSection, AiSection];
+    const sections = [CustomSection, ElementsSection, AiPanel];
 
     return (
       <PolotnoContainer className="polotno-app-container">
