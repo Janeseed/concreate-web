@@ -20,7 +20,7 @@ import { Toolbar } from 'polotno/toolbar/toolbar';
 import { setGoogleFonts } from 'polotno/config';
 
 //import parts of UIs
-import { AiSection } from './aisection';
+import { AiPanel } from './AiPanel';
 import './index.css';
 import myFonts from './fonts';
 
