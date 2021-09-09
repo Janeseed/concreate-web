@@ -20,12 +20,13 @@ import { Toolbar } from 'polotno/toolbar/toolbar';
 import { setGoogleFonts } from 'polotno/config';
 
 //import parts of UIs
-import { AiPanel } from './AiPanel';
+//import AiPanel from './AiPanel';
 import './index.css';
 import myFonts from './fonts';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
+import FaCompass from '@meronex/icons/fa/FaCompass';
 
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
@@ -297,9 +298,32 @@ class DesignerSide extends React.Component {
         );
       }),
     };
+
+    const AiSection = {
+      name: 'estimate',
+      Tab: (props) => (
+        <SectionTab name="Estimate" {...props}>
+          <FaCompass icon="new-text-box" />
+        </SectionTab>
+      ),
+      // we need observer to update component automatically on any store changes
+      Panel: observer(({store}) => {
+        return(
+          <div>
+            <h2>Recommandation</h2>
+            <img className='previewImage'
+            width='200'
+            height='200'
+            //소스 이미지 여기로 넣는 것 맞나요
+            src = {this.state.imgSrcURL}
+            />
+          </div>
+        );
+      }),
+    };
     
     //section을 지정해주는 곳
-    const sections = [CustomSection, ElementsSection, AiPanel];
+    const sections = [CustomSection, ElementsSection, AiSection];
 
     return (
       <PolotnoContainer className="polotno-app-container">
