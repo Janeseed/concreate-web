@@ -31,7 +31,7 @@ import FaCompass from '@meronex/icons/fa/FaCompass';
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
-const socket = io.connect('http://143.248.250.206:3002');
+const socket = io.connect('http://143.248.250.173:3002');
 const json = [];
 
 socket.on('toBack', data => {
