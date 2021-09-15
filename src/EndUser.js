@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
 import { SketchPicker, CirclePicker } from 'react-color';
-import io from 'socket.io-client'
+import io from 'socket.io-client';
 //import polotno libraries
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
 import { ElementsSection } from 'polotno/side-panel';
@@ -26,8 +26,6 @@ import BiPalette from '@meronex/icons/bi/BiPalette';
 //import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
-
-const socket = io.connect('http://143.248.250.173:3002');
 
 class EndUser extends React.Component {
   constructor(props) {
@@ -150,6 +148,7 @@ class EndUser extends React.Component {
     });
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
+    this.socket = io.connect('http://143.248.250.173:3002');
   }
 
   handleBackColorChange = (color) => {
@@ -161,9 +160,43 @@ class EndUser extends React.Component {
     });
   };
 
+  componentDidMount() {
+    const store = this.store;
+    const socket = this.socket;
+
+    socket.on('requestJson', () => {
+      const requestedJson = store.toJSON();
+      socket.emit('requestedJson', requestedJson);
+    });
+
+    socket.on('sendDataURL', data => {
+      this.setState({imgSrcURL: data});
+    });
+
+    socket.on('sendJson', data => {
+      this.setState({
+        jsonFromDesigner: data,
+        IsChanged: !this.state.IsChanged
+      });
+    });
+  };
+  
+  componentWillUnmount() {
+    setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
+    myFonts.map(fontOject => addGlobalFont(fontOject))
+    
+    const store = this.store;
+    const socket = this.socket;
+    socket.on('requestJson', () => {
+      const requestedJson = store.toJSON();
+      socket.emit('requestedJson', requestedJson);
+    });
+  }
+
   render() {
     const store = this.store;
-
+    const socket = this.socket;
+    
     //set the fonts here
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
     myFonts.map(fontOject => addGlobalFont(fontOject))
@@ -316,7 +349,7 @@ class EndUser extends React.Component {
                 }}
               />
               <div id="description">
-                <h3 style={{color: 'red'}}>{this.state.IsChanged ? "New Recommandation!" : null}</h3>
+                <h3 style={{color: 'red'}}>{this.state.IsChanged ? "New Recommandation! Click the image to see change" : null}</h3>
                 <p>{this.state.IsChanged ? this.state.changedReason : null}</p>
               </div>
             </div>
@@ -332,22 +365,6 @@ class EndUser extends React.Component {
         );
       }),
     };
-
-    socket.on('requestJson', () => {
-      const requestedJson = store.toJSON();
-      socket.emit('requestedJson', requestedJson);
-    });
-
-    socket.on('sendDataURL', data => {
-      this.setState({imgSrcURL: data});
-    });
-
-    socket.on('sendJson', data => {
-      this.setState({
-        jsonFromDesigner: data,
-        IsChanged: !this.state.IsChanged
-      });
-    });
 
     //section을 지정해주는 곳
     const sections = [CustomSection, ElementsSection];

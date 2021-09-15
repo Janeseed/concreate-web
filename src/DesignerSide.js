@@ -1,10 +1,10 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, TextArea } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
 import { SketchPicker, CirclePicker } from 'react-color';
-import io from 'socket.io-client'
+import io from 'socket.io-client';
 //import polotno libraries
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
 import { ElementsSection } from 'polotno/side-panel';
@@ -139,7 +139,7 @@ class DesignerSide extends React.Component {
         colorSaturation: 0,
         colorDivergent: 0,
         colorDiff: 0,
-        titleTypeface: 'serif',
+        titleTypeface: '',
         titleStroke: 0,
         numTypeface: 0,
         textSize: 0,
@@ -160,6 +160,7 @@ class DesignerSide extends React.Component {
     });
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
+    this.socket = io.connect('http://143.248.250.173:3002');
   }
 
   handleBackColorChange = (color) => {
@@ -171,9 +172,24 @@ class DesignerSide extends React.Component {
     });
   };
 
+  componentDidMount() {
+    const store = this.store;
+    const socket = this.socket;
+    
+    socket.on('requestedJson', data => {
+      store.loadJSON(data, true);
+    });
+  };
+
+  componentWillUnmount() {
+    setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
+    myFonts.map(fontOject => addGlobalFont(fontOject))
+  }
+
   render() {
     const store = this.store;
-
+    const socket = this.socket;
+    
     //set the fonts here
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
     myFonts.map(fontOject => addGlobalFont(fontOject))
@@ -312,7 +328,7 @@ class DesignerSide extends React.Component {
       // we need observer to update component automatically on any store changes
       Panel: observer(({store}) => {
         return(
-          <div>
+          <>
             <h2>File</h2>
             <Button
               className="designer-buttons"
@@ -326,9 +342,11 @@ class DesignerSide extends React.Component {
               className="designer-buttons"
               onClick={() => {
                 const sendJson = store.toJSON();
+
                 const maxWidth = 200;
                 const scale = maxWidth / store.width;
                 const imageBase64 = store.toDataURL({ pixelRatio: scale });
+                
                 socket.emit('sendJson', sendJson);
                 socket.emit('sendDataURL', imageBase64);
               }}
@@ -362,14 +380,11 @@ class DesignerSide extends React.Component {
                 </ul>
               </div>
             </div>
-          </div>
+
+          </>
         );
       }),
     };
-
-    socket.on('requestedJson', data => {
-      store.loadJSON(data, true);
-    });
 
     //section을 지정해주는 곳
     const sections = [CustomSection, ElementsSection];
