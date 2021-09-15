@@ -2,44 +2,32 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { SwatchesPicker, CirclePicker } from 'react-color';
+import { Popover2 } from "@blueprintjs/popover2";
+import { SketchPicker, CirclePicker } from 'react-color';
 import io from 'socket.io-client'
 //import polotno libraries
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
-import {
-  TextSection,
-  PhotosSection,
-  ElementsSection,
-  UploadSection,
-  BackgroundSection,
-} from 'polotno/side-panel';
+import { ElementsSection } from 'polotno/side-panel';
 import { SectionTab, SidePanel } from 'polotno/side-panel';
 import Workspace from 'polotno/canvas/workspace';
-import store, { createStore } from 'polotno/model/store';
+import { createStore } from 'polotno/model/store';
 import { Toolbar } from 'polotno/toolbar/toolbar';
-import { setGoogleFonts } from 'polotno/config';
+import { addGlobalFont, setGoogleFonts } from 'polotno/config';
 
 //import parts of UIs
-//import AiPanel from './AiPanel';
 import './index.css';
 import myFonts from './fonts';
+import './textToolbar';
+//import './svgToolbar';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
-import FaCompass from '@meronex/icons/fa/FaCompass';
 
+//import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
-//import svg urls
 const socket = io.connect('http://143.248.250.173:3002');
-const json = [];
-
-socket.on('toBack', data => {
-  console.log(data);
-  json.push(data);
-  console.log('successfully get json data');
-});
 
 var jsonForUser = [];
 var jsonImgForUser = [];
@@ -113,7 +101,7 @@ class DesignerSide extends React.Component {
         type: 'svg',
         src: logoUrl, //relative path 면 안되는 이유가 뭐지? 클라이언트에 같이 보여지는게 아니라서..?
         maskSrc: '', // should we draw mask image over svg element?
-        keepRatio: false, // can we change aspect ration of svg?
+        keepRatio: true, // can we change aspect ration of svg?
         x: 0,
         y: 0,
         rotation: 0,
@@ -124,8 +112,8 @@ class DesignerSide extends React.Component {
         brightness: 0,
         shadowEnabled: false,
         shadowBlur: 0,
-        width: 100,
-        height: 100,
+        width: 250,
+        height: 66.54,
         flipX: false,
         flipY: false,
       },
@@ -133,7 +121,7 @@ class DesignerSide extends React.Component {
         type: 'svg',
         src: motifUrl,
         maskSrc: '', // should we draw mask image over svg element?
-        keepRatio: false, // can we change aspect ration of svg?
+        keepRatio: true, // can we change aspect ration of svg?
         x: 0,
         y: 0,
         rotation: 0,
@@ -144,8 +132,8 @@ class DesignerSide extends React.Component {
         brightness: 0,
         shadowEnabled: false,
         shadowBlur: 0,
-        width: 100,
-        height: 100,
+        width: 300.7,
+        height: 464.7,
         flipX: false,
         flipY: false,
       },
@@ -177,26 +165,14 @@ class DesignerSide extends React.Component {
     });
   };
 
-  handleSocketio = (store) => {
-    const json = store.toJSON();
-    socket.emit('save', JSON.stringify(json));
-  };
-
-  handleLoad = (store) => {
-    const clientWork = JSON.parse(json[0]);
-    store.loadJSON(clientWork, true);
-  };
-
-  addMyFonts = (fontObject) => {
-    this.store.addFont(fontObject);
-  };
-
   render() {
     const store = this.store;
 
     //set the fonts here
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
-    myFonts.map(this.addMyFonts);
+    for ( const [index, value] of myFonts.entries()) {
+      addGlobalFont(value);
+    }
 
     //Palette Section Panel
     const CustomSection = {
@@ -248,89 +224,145 @@ class DesignerSide extends React.Component {
                   onClick={() => {
                     store.activePage?.addElement(this.state.bodyStyleENG);
                   }}
-                  className='text-header'
+                  className='text-body'
                 >
                   Create English Body Text
                 </Button>
               </ButtonGroup>
             </div>
             <div className='background-section'>
-              <h2>Background Color</h2>
-              <div>
-                <p>Primary Color</p>
+              <div style={{
+                }}>
+                <h2>Background Color</h2>
+                <div style={{
+                  margin: '10px',
+                }}>
+                <Popover2
+                  content={
+                  <SketchPicker
+                    color={store.activePage?.background}
+                    onChangeComplete = {this.handleBackColorChange}
+                    presetColors = {['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB', '#FFB800', '#FF2525', '#614600', '#ffffff','#bfbfbf','#808080', '#404040', '#000000']}
+                  />
+                  }
+                >
+                  <Button
+                    style = {{
+                      width: '80px',
+                      height: '80px',
+                      background: `${store.activePage?.background}`,
+                      border: '5px',
+                    }}
+                  />
+                </Popover2>
+                </div>
+              </div>
+              <div style={{
+                display:'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+                <p
+                  style={{
+                  }}
+                >
+                  Primary Color
+                </p>
                 <CirclePicker
                   colors={this.state.primaryColor}
-                  circleSpacing={7}
-                  onChangeComplete={this.handleBackColorChange}
+                  circleSize={20}
+                  circleSpacing={5}
+                  onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
-              <div>
-                <p>Secondary Color</p>
+              <div style={{
+                display:'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+                <p
+                  style={{
+                  }}
+                >
+                  Secondary Color
+                </p>
                 <CirclePicker
                   colors={this.state.secondaryColor}
-                  circleSpacing={7}
-                  onChangeComplete={this.handleBackColorChange}
+                  circleSize={20}
+                  circleSpacing={5}
+                  onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
-              <div>
-                <p>Neutral Color</p>
+              <div style={{
+                display:'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+                <p
+                  style={{
+                  }}
+                >
+                  Neutral Color
+                </p>
                 <CirclePicker
                   colors={this.state.neutralColor}
-                  circleSpacing={7}
-                  onChangeComplete={this.handleBackColorChange}
+                  circleSize={20}
+                  circleSpacing={5}
+                  onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
             </div>
             <div className='logo-section'>
               <h2>Logo</h2>
-              <Button onClick={this.handleOnClickLogo} />
+              <img
+                className='previewImage'
+                width='100'
+                src = {logoUrl}
+                onClick={this.handleOnClickLogo}
+              />
             </div>
             <div className='motif-section'>
               <h2>Graphic Motifs</h2>
-              <Button onClick={this.handleOnClickMotif} />
-            </div>
-            <div>
-              <h2>Estimate the Result</h2>
-              <Button onClick={() => {this.handleSocketio(store)}}>
-                Save
-              </Button>
-              <Button onClick={() => {this.handleLoad(store)}}>
-                Load
-              </Button>
+              <img
+                className='previewImage'
+                height='100'
+                src = {motifUrl}
+                onClick={this.handleOnClickMotif}
+              />
             </div>
           </div>
         );
       }),
     };
-
+    
     const AiSection = {
       name: 'estimate',
-      Tab: (props) => (
-        <SectionTab name="Estimate" {...props}>
-          <FaCompass icon="new-text-box" />
-        </SectionTab>
-      ),
+      Tab: (props) => (<div></div>),
       // we need observer to update component automatically on any store changes
       Panel: observer(({store}) => {
         return(
           <div>
-          <h2>File</h2>
-            <Button onClick={() => {
-              socket.emit('requestJson');
+            <h2>File</h2>
+            <Button
+              onClick={() => {
+                socket.emit('requestJson');
               }}
             >
               Get
             </Button>
-            <Button onClick={() => {
-              const sendJson = store.toJSON();
+            <Button
+              onClick={() => {
+                const sendJson = store.toJSON();
 
-              const maxWidth = 200;
-              const scale = maxWidth / store.width;
-              const imageBase64 = store.toDataURL({ pixelRatio: scale });
+                const maxWidth = 200;
+                const scale = maxWidth / store.width;
+                const imageBase64 = store.toDataURL({ pixelRatio: scale });
 
-              socket.emit('sendJson', sendJson);
-              socket.emit('sendDataURL', imageBase64);
-              console.log(imageBase64)
+                socket.emit('sendJson', sendJson);
+                socket.emit('sendDataURL', imageBase64);
               }}
             >
               Send
@@ -341,8 +373,7 @@ class DesignerSide extends React.Component {
     };
 
     socket.on('requestedJson', data => {
-      store.loadJSON(data);
-      console.log('requestedJson')
+      this.store.loadJSON(data);
     });
 
     //section을 지정해주는 곳
@@ -351,11 +382,18 @@ class DesignerSide extends React.Component {
 
     return (
       <PolotnoContainer className="polotno-app-container">
-        <SidePanelWrap>
+        <SidePanelWrap style={{
+          width: '600',
+        }}>
           <SidePanel store={store} sections={sections} defaultSection="custom" />
         </SidePanelWrap>
         <WorkspaceWrap>
-          <Toolbar store={store} dwonloadButtonEnabled hideTextEffects={false} hideOpacity={true} />
+          <Toolbar
+            store={store}
+            downloadButtonEnabled={false}
+            hideTextEffects={true}
+            hideOpacity={true}
+          />
           <Workspace store={store} pageControlsEnabled={false}/>
         </WorkspaceWrap>
         <SidePanelWrap>

@@ -9,7 +9,6 @@ server.listen(port, function(){
   console.log(`listening on port ${port}`);
 })
 
-
 var io = require('socket.io')(server,{
   cors:{
     origin :"*",
@@ -19,24 +18,26 @@ var io = require('socket.io')(server,{
 
 io.on('connection', socket =>{
   console.log("New client connected");
-  socket.on('save', data => {
-    io.emit('toBack', data);
-    console.log('emit the saved json to client')
-  });
   socket.on('requestJson', data => {
-  io.emit('requestJson', data);
-  console.log('requestJson')
+    io.emit('requestJson', data);
+    console.log('requestJson');
   });
   socket.on('requestedJson', data => {
+    fs.writeFile('./get.json', JSON.stringify(data), (err) => {
+      if (err) throw err;
+    });
     io.emit('requestedJson', data);
-    console.log('requestedJson')
+    console.log('requestedJson');
   });
   socket.on('sendJson', data => {
+    fs.writeFile('./send.json', JSON.stringify(data), (err) => {
+      if (err) throw err;
+    });
     io.emit('sendJson', data);
-    console.log('sendJson')
+    console.log('sendJson');
   });
   socket.on('sendDataURL', data => {
     io.emit('sendDataURL', data);
-    console.log('sendDataURL')
+    console.log('sendDataURL');
   });
 })
