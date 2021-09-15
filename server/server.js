@@ -26,6 +26,7 @@ io.on('connection', socket =>{
     fs.writeFile('./get.json', JSON.stringify(data), (err) => {
       if (err) throw err;
     });
+    console.log('requested json saved')
     io.emit('requestedJson', data);
     console.log('requestedJson');
   });

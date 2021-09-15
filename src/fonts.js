@@ -1,5 +1,3 @@
-import React from 'react';
-
 const myFonts = [
   {
     fontFamily: '가나초코',

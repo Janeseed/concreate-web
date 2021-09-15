@@ -9,7 +9,6 @@ import {
   FontFamilyInput,
   FontSizeInput,
   FontStyleGroup,
-  FontColorInput,
   SpacingInput
 } from "polotno/toolbar/text-toolbar";
 

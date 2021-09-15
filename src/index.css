@@ -246,3 +246,30 @@
   font-weight: normal;
   font-style: normal;
 }
+
+.color-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.color-line-title {
+  margin-right: 10px;
+}
+
+#dseigner-side-scores {
+  margin-left: 15px;
+}
+
+li {
+  font-size: 12pt;
+  padding-bottom: 0.5rem;
+}
+.designer-buttons {
+  margin: 7px;
+  width: 100px;
+  height: 50px;
+  font-size: 20pt;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}

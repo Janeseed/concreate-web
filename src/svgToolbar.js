@@ -2,7 +2,6 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Navbar, Alignment, Button } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
-import ColorPicker from "polotno/toolbar/color-picker";
 import { unstable_registerToolbarComponent } from 'polotno/config';
 import { SketchPicker } from 'react-color';
 

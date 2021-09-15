@@ -18,7 +18,7 @@ import { addGlobalFont, setGoogleFonts } from 'polotno/config';
 import './index.css';
 import myFonts from './fonts';
 import './textToolbar';
-//import './svgToolbar';
+import './svgToolbar';
 
 // import icon
 import BiPalette from '@meronex/icons/bi/BiPalette';
@@ -28,9 +28,6 @@ const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
 
 const socket = io.connect('http://143.248.250.173:3002');
-
-var jsonForUser = [];
-var jsonImgForUser = [];
 
 class DesignerSide extends React.Component {
   constructor(props) {
@@ -137,9 +134,26 @@ class DesignerSide extends React.Component {
         flipX: false,
         flipY: false,
       },
+      user: {
+        colorBrightness: 0,
+        colorSaturation: 0,
+        colorDivergent: 0,
+        colorDiff: 0,
+        titleTypeface: 'serif',
+        titleStroke: 0,
+        numTypeface: 0,
+        textSize: 0,
+        symmetryHorizontal: 0,
+        symmetryVertical: 0,
+        alignment: 0,
+        componentAngleDiff: 0,
+        negativeSpace: 0,
+      },
+      descriptionToSee: '',
+      descriptionToSend: '',
     };
     this.store = createStore({
-      key: 'RVVmbQODqrPZUXq1u5AN', // you can create it here: https://polotno.dev/cabinet/
+      key: 'NcHyMlHqjQJUyb4mwfEr', // you can create it here: https://polotno.dev/cabinet/
       // you can hide back-link on a paid licence
       // but it will be good if you can keep it for Polotno project support
       showCredit: true,
@@ -147,14 +161,6 @@ class DesignerSide extends React.Component {
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
   }
-
-  handleOnClickLogo = () => {
-    this.store.activePage?.addElement(this.state.logo);
-  };
-
-  handleOnClickMotif = () => {
-    this.store.activePage?.addElement(this.state.graphicMotif);
-  };
 
   handleBackColorChange = (color) => {
     this.setState({
@@ -170,9 +176,7 @@ class DesignerSide extends React.Component {
 
     //set the fonts here
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
-    for ( const [index, value] of myFonts.entries()) {
-      addGlobalFont(value);
-    }
+    myFonts.map(fontOject => addGlobalFont(fontOject))
 
     //Palette Section Panel
     const CustomSection = {
@@ -190,40 +194,34 @@ class DesignerSide extends React.Component {
               <h2>Brand Personality</h2>
               <h4>Keyword: Fancy, Young, Playful</h4>
               <p>
-                Nudake is a place where your dessert fantasies come alive. We make the most unique desserts inspired by fashion, art, and your own sweet dreams.
+                Nudake is a place where your dessert fantasies come alive.
+                We make the most unique desserts inspired by fashion, art,
+                and your own sweet dreams.
               </p>
             </div>
             <div className='textSection'>
               <h2>Text</h2>
               <ButtonGroup style={{ minWidth: 200 }} vertical={true} alignText={'center'}>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.titleStyleKR);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.titleStyleKR);}}
                   className='text-header'
                 >
                   한글 제목
                 </Button>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.bodyStyleKR);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.bodyStyleKR);}}
                   className='text-body'
                 >
                   한글 본문
                 </Button>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.titleStyleENG);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.titleStyleENG);}}
                   className='text-header'
                 >
                   Create English Header
                 </Button>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.bodyStyleENG);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.bodyStyleENG);}}
                   className='text-body'
                 >
                   Create English Body Text
@@ -257,18 +255,8 @@ class DesignerSide extends React.Component {
                 </Popover2>
                 </div>
               </div>
-              <div style={{
-                display:'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <p
-                  style={{
-                  }}
-                >
-                  Primary Color
-                </p>
+              <div className="color-line">
+                <p className="color-line-title">Primary</p>
                 <CirclePicker
                   colors={this.state.primaryColor}
                   circleSize={20}
@@ -276,18 +264,8 @@ class DesignerSide extends React.Component {
                   onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
-              <div style={{
-                display:'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <p
-                  style={{
-                  }}
-                >
-                  Secondary Color
-                </p>
+              <div className="color-line">
+                <p className="color-line-title">Secondary</p>
                 <CirclePicker
                   colors={this.state.secondaryColor}
                   circleSize={20}
@@ -295,18 +273,8 @@ class DesignerSide extends React.Component {
                   onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
-              <div style={{
-                display:'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <p
-                  style={{
-                  }}
-                >
-                  Neutral Color
-                </p>
+              <div className="color-line">
+                <p className="color-line-title">Neutral</p>
                 <CirclePicker
                   colors={this.state.neutralColor}
                   circleSize={20}
@@ -321,7 +289,7 @@ class DesignerSide extends React.Component {
                 className='previewImage'
                 width='100'
                 src = {logoUrl}
-                onClick={this.handleOnClickLogo}
+                onClick={() => {store.activePage?.addElement(this.state.logo)}}
               />
             </div>
             <div className='motif-section'>
@@ -330,7 +298,7 @@ class DesignerSide extends React.Component {
                 className='previewImage'
                 height='100'
                 src = {motifUrl}
-                onClick={this.handleOnClickMotif}
+                onClick={() => {store.activePage?.addElement(this.state.graphicMotif)}}
               />
             </div>
           </div>
@@ -340,40 +308,67 @@ class DesignerSide extends React.Component {
     
     const AiSection = {
       name: 'estimate',
-      Tab: (props) => (<div></div>),
+      Tab: () => (<div></div>),
       // we need observer to update component automatically on any store changes
       Panel: observer(({store}) => {
         return(
           <div>
             <h2>File</h2>
             <Button
+              className="designer-buttons"
               onClick={() => {
                 socket.emit('requestJson');
               }}
             >
-              Get
+              GET
             </Button>
             <Button
+              className="designer-buttons"
               onClick={() => {
                 const sendJson = store.toJSON();
-
                 const maxWidth = 200;
                 const scale = maxWidth / store.width;
                 const imageBase64 = store.toDataURL({ pixelRatio: scale });
-
                 socket.emit('sendJson', sendJson);
                 socket.emit('sendDataURL', imageBase64);
               }}
             >
-              Send
+              SEND
             </Button>
+            <div id="designer-score-section">
+              <h2>User Data</h2>
+              <div id="dseigner-side-scores">
+                <h3>color</h3>
+                <ul>
+                  <li>dominant color brightness: {this.state.user.colorBrightness}</li>
+                  <li>dominant color Saturation: {this.state.user.colorSaturation}</li>
+                  <li>color divergence: {this.state.user.colorDivergent}</li>
+                  <li>color hue difference: {this.state.user.colorDivergent}</li>
+                </ul>
+                <h3>text</h3>
+                <ul>
+                  <li>title typeface: {this.state.user.titleTypeface}</li>
+                  <li>title typeface stroke: {this.state.user.titleStroke}</li>
+                  <li>number of typeface usage: {this.state.user.numTypeface}</li>
+                  <li>text size: {this.state.user.textSize}</li>
+                </ul>
+                <h3>layout</h3>
+                <ul>
+                  <li>horizontal symmetry: {this.state.user.symmetryHorizontal}</li>
+                  <li>vertical symmetry: {this.state.user.symmetryVertical}</li>
+                  <li>alignment: {this.state.user.alignment}</li>
+                  <li>angle between components: {this.state.user.componentAngleDiff}</li>
+                  <li>negative space: {this.state.user.negativeSpace}</li>
+                </ul>
+              </div>
+            </div>
           </div>
         );
       }),
     };
 
     socket.on('requestedJson', data => {
-      this.store.loadJSON(data);
+      store.loadJSON(data, true);
     });
 
     //section을 지정해주는 곳
@@ -382,9 +377,7 @@ class DesignerSide extends React.Component {
 
     return (
       <PolotnoContainer className="polotno-app-container">
-        <SidePanelWrap style={{
-          width: '600',
-        }}>
+        <SidePanelWrap>
           <SidePanel store={store} sections={sections} defaultSection="custom" />
         </SidePanelWrap>
         <WorkspaceWrap>

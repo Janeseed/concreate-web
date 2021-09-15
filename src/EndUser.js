@@ -136,6 +136,11 @@ class EndUser extends React.Component {
       },
       imageSrcUrl: null,
       jsonFromDesigner: null,
+      colorScore: 0,
+      textScore: 0,
+      layoutScore: 0,
+      IsChanged: false,
+      changedReason: null,
     };
     this.store = createStore({
       key: 'RVVmbQODqrPZUXq1u5AN', // you can create it here: https://polotno.dev/cabinet/
@@ -146,14 +151,6 @@ class EndUser extends React.Component {
     this.store.setSize(1080, 1080);
     this.page = this.store.addPage();
   }
-
-  handleOnClickLogo = () => {
-    this.store.activePage?.addElement(this.state.logo);
-  };
-
-  handleOnClickMotif = () => {
-    this.store.activePage?.addElement(this.state.graphicMotif);
-  };
 
   handleBackColorChange = (color) => {
     this.setState({
@@ -169,30 +166,7 @@ class EndUser extends React.Component {
 
     //set the fonts here
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
-    for ( const [index, value] of myFonts.entries()) {
-      addGlobalFont(value);
-    }
-
-    // write a function for throttle saving
-    let timeout = null;
-    const requestSave = () => {
-      // if save is already requested - do nothing
-      if (timeout) {
-        return;
-      }
-      // schedule saving to the backend
-      timeout = setTimeout(() => {
-        // reset timeout
-        timeout = null;
-        // export the design
-        const json = store.toJSON();
-        // save it to the backend
-        fetch('http://143.248.250.173:3002', {
-          method: 'POST',
-          body: JSON.stringify(json),
-        });
-      }, 1000);
-    };
+    myFonts.map(fontOject => addGlobalFont(fontOject))
 
     //Palette Section Panel
     const CustomSection = {
@@ -210,40 +184,34 @@ class EndUser extends React.Component {
               <h2>Brand Personality</h2>
               <h4>Keyword: Fancy, Young, Playful</h4>
               <p>
-                Nudake is a place where your dessert fantasies come alive. We make the most unique desserts inspired by fashion, art, and your own sweet dreams.
+                Nudake is a place where your dessert fantasies come alive.
+                We make the most unique desserts inspired by fashion, art,
+                and your own sweet dreams.
               </p>
             </div>
             <div className='textSection'>
               <h2>Text</h2>
               <ButtonGroup style={{ minWidth: 200 }} vertical={true} alignText={'center'}>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.titleStyleKR);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.titleStyleKR);}}
                   className='text-header'
                 >
                   한글 제목
                 </Button>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.bodyStyleKR);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.bodyStyleKR);}}
                   className='text-body'
                 >
                   한글 본문
                 </Button>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.titleStyleENG);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.titleStyleENG);}}
                   className='text-header'
                 >
                   Create English Header
                 </Button>
                 <Button
-                  onClick={() => {
-                    store.activePage?.addElement(this.state.bodyStyleENG);
-                  }}
+                  onClick={() => {store.activePage?.addElement(this.state.bodyStyleENG);}}
                   className='text-body'
                 >
                   Create English Body Text
@@ -277,18 +245,8 @@ class EndUser extends React.Component {
                 </Popover2>
                 </div>
               </div>
-              <div style={{
-                display:'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <p
-                  style={{
-                  }}
-                >
-                  Primary
-                </p>
+              <div className="color-line">
+                <p className="color-line-title">Primary</p>
                 <CirclePicker
                   colors={this.state.primaryColor}
                   circleSize={20}
@@ -296,19 +254,8 @@ class EndUser extends React.Component {
                   onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
-              <div style={{
-                display:'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <p
-                  style={{
-                    width: '100px'
-                  }}
-                >
-                  Secondary
-                </p>
+              <div className="color-line">
+                <p className="color-line-title">Secondary</p>
                 <CirclePicker
                   colors={this.state.secondaryColor}
                   circleSize={20}
@@ -316,18 +263,8 @@ class EndUser extends React.Component {
                   onChangeComplete = {this.handleBackColorChange}
                 />
               </div>
-              <div style={{
-                display:'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <p
-                  style={{
-                  }}
-                >
-                  Neutral
-                </p>
+              <div className="color-line">
+                <p className="color-line-title">Neutral</p>
                 <CirclePicker
                   colors={this.state.neutralColor}
                   circleSize={20}
@@ -342,7 +279,7 @@ class EndUser extends React.Component {
                 className='previewImage'
                 width='100'
                 src = {logoUrl}
-                onClick={this.handleOnClickLogo}
+                onClick={() => {store.activePage?.addElement(this.state.logo)}}
               />
             </div>
             <div className='motif-section'>
@@ -351,7 +288,7 @@ class EndUser extends React.Component {
                 className='previewImage'
                 height='100'
                 src = {motifUrl}
-                onClick={this.handleOnClickMotif}
+                onClick={() => {store.activePage?.addElement(this.state.graphicMotif)}}
               />
             </div>
           </div>
@@ -361,32 +298,40 @@ class EndUser extends React.Component {
 
     const AiSection = {
       name: 'estimate',
-      Tab: (props) => (<div></div>),
+      Tab: () => (<div></div>),
       // we need observer to update component automatically on any store changes
       Panel: observer(({store}) => {
         return(
           <div>
-            <h2>Recommandation</h2>
-            <img className='previewImage'
-            width='200'
-            height='200'
-            //소스 이미지 여기로 넣는 것 맞나요
-            src = {this.state.imgSrcURL}
-            onClick={() => {
-              store.loadJSON(this.state.jsonFromDesigner)
-            }}
-            />
-            {this.state.recommendation}
+            <div id="recommendation-section">
+              <h2>Recommendation</h2>
+              <img
+                id='previewImage'
+                width='200'
+                height='200'
+                src = {this.state.imgSrcURL}
+                onClick={() => {
+                  store.loadJSON(this.state.jsonFromDesigner, true);
+                  this.setState({IsChanged: !this.state.IsChanged});
+                }}
+              />
+              <div id="description">
+                <h3 style={{color: 'red'}}>{this.state.IsChanged ? "New Recommandation!" : null}</h3>
+                <p>{this.state.IsChanged ? this.state.changedReason : null}</p>
+              </div>
+            </div>
+            <div id="user-score-section">
+              <h2>Similarity Score</h2>
+              <div id="user-side-scores">
+                <p>color: {this.state.colorScore}</p>
+                <p>text: {this.state.textScore}</p>
+                <p>layout: {this.state.layoutScore}</p>
+              </div>
+            </div>
           </div>
         );
       }),
     };
-
-    // request saving operation on any changes
-    store.on('change', () => {
-      requestSave();
-      console.log('changed');
-    });
 
     socket.on('requestJson', () => {
       const requestedJson = store.toJSON();
@@ -394,17 +339,14 @@ class EndUser extends React.Component {
     });
 
     socket.on('sendDataURL', data => {
-      this.setState({
-        imgSrcURL: data,
-      });
-      console.log('get dataURL from designer');
+      this.setState({imgSrcURL: data});
     });
 
     socket.on('sendJson', data => {
       this.setState({
         jsonFromDesigner: data,
+        IsChanged: !this.state.IsChanged
       });
-      console.log('get json from designer');
     });
 
     //section을 지정해주는 곳
@@ -413,7 +355,7 @@ class EndUser extends React.Component {
 
     return (
       <PolotnoContainer className="polotno-app-container">
-        <SidePanelWrap>
+        <SidePanelWrap >
           <SidePanel store={store} sections={sections} defaultSection="custom" />
         </SidePanelWrap>
         <WorkspaceWrap>
