@@ -25,9 +25,7 @@ import BiPalette from '@meronex/icons/bi/BiPalette';
 
 //import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
-const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
-
-const socket = io.connect('http://143.248.250.173:3002');
+const logoUrl = 'https://assets.codepen.io/3/kiwi.svg';
 
 class DesignerSide extends React.Component {
   constructor(props) {
@@ -109,8 +107,8 @@ class DesignerSide extends React.Component {
         brightness: 0,
         shadowEnabled: false,
         shadowBlur: 0,
-        width: 250,
-        height: 66.54,
+        width: 612,
+        height: 502.174,
         flipX: false,
         flipY: false,
       },
@@ -182,8 +180,15 @@ class DesignerSide extends React.Component {
   };
 
   componentWillUnmount() {
+    const store = this.store;
+    const socket = this.socket;
+    
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
     myFonts.map(fontOject => addGlobalFont(fontOject))
+
+    socket.on('requestedJson', data => {
+      store.loadJSON(data, true);
+    });
   }
 
   render() {

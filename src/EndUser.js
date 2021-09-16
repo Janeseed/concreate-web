@@ -25,7 +25,7 @@ import BiPalette from '@meronex/icons/bi/BiPalette';
 
 //import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
-const logoUrl = process.env.PUBLIC_URL + '/vocali_logo.svg';
+const logoUrl = 'https://assets.codepen.io/3/kiwi.svg';
 
 class EndUser extends React.Component {
   constructor(props) {
@@ -107,8 +107,8 @@ class EndUser extends React.Component {
         brightness: 0,
         shadowEnabled: false,
         shadowBlur: 0,
-        width: 250,
-        height: 66.54,
+        width: 612,
+        height: 502.174,
         flipX: false,
         flipY: false,
       },
@@ -340,8 +340,8 @@ class EndUser extends React.Component {
               <h2>Recommendation</h2>
               <img
                 id='previewImage'
-                width='200'
-                height='200'
+                width='300'
+                height='300'
                 src = {this.state.imgSrcURL}
                 onClick={() => {
                   store.loadJSON(this.state.jsonFromDesigner, true);
