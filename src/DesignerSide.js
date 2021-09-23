@@ -132,21 +132,19 @@ class DesignerSide extends React.Component {
         flipX: false,
         flipY: false,
       },
-      user: {
-        colorBrightness: 0,
-        colorSaturation: 0,
-        colorDivergent: 0,
-        colorDiff: 0,
-        titleTypeface: '',
-        titleStroke: 0,
-        numTypeface: 0,
-        textSize: 0,
-        symmetryHorizontal: 0,
-        symmetryVertical: 0,
-        alignment: 0,
-        componentAngleDiff: 0,
-        negativeSpace: 0,
-      },
+      colorBrightness: 0,
+      colorSaturation: 0,
+      colorDivergent: 0,
+      colorDiff: 0,
+      titleTypeface: '',
+      titleStroke: 0,
+      numTypeface: 0,
+      textSize: 0,
+      symmetryHorizontal: 0,
+      symmetryVertical: 0,
+      alignment: 0,
+      componentAngleDiff: 0,
+      negativeSpace: 0,
       descriptionToSee: '',
       descriptionToSend: '',
     };
@@ -177,6 +175,9 @@ class DesignerSide extends React.Component {
     socket.on('requestedJson', data => {
       store.loadJSON(data, true);
     });
+    socket.on('show', data => {
+      this.setState({componentAngleDiff: data.angleResult, textSize: data.textResult});
+    });
   };
 
   componentWillUnmount() {
@@ -188,6 +189,9 @@ class DesignerSide extends React.Component {
 
     socket.on('requestedJson', data => {
       store.loadJSON(data, true);
+    });
+    socket.on('show', data => {
+      this.setState({componentAngleDiff: data.angleResult, textSize: data.textResult});
     });
   }
 
@@ -310,6 +314,7 @@ class DesignerSide extends React.Component {
                 className='previewImage'
                 width='100'
                 src = {logoUrl}
+                alt = 'logo'
                 onClick={() => {store.activePage?.addElement(this.state.logo)}}
               />
             </div>
@@ -319,6 +324,7 @@ class DesignerSide extends React.Component {
                 className='previewImage'
                 height='100'
                 src = {motifUrl}
+                alt = 'motif'
                 onClick={() => {store.activePage?.addElement(this.state.graphicMotif)}}
               />
             </div>
@@ -361,27 +367,18 @@ class DesignerSide extends React.Component {
             <div id="designer-score-section">
               <h2>User Data</h2>
               <div id="dseigner-side-scores">
-                <h3>color</h3>
-                <ul>
-                  <li>dominant color brightness: {this.state.user.colorBrightness}</li>
-                  <li>dominant color Saturation: {this.state.user.colorSaturation}</li>
-                  <li>color divergence: {this.state.user.colorDivergent}</li>
-                  <li>color hue difference: {this.state.user.colorDivergent}</li>
-                </ul>
                 <h3>text</h3>
                 <ul>
-                  <li>title typeface: {this.state.user.titleTypeface}</li>
-                  <li>title typeface stroke: {this.state.user.titleStroke}</li>
-                  <li>number of typeface usage: {this.state.user.numTypeface}</li>
-                  <li>text size: {this.state.user.textSize}</li>
+                  <li>title typeface stroke: {this.state.titleStroke}</li>
+                  <li>text size: {this.state.textSize}</li>
                 </ul>
                 <h3>layout</h3>
                 <ul>
-                  <li>horizontal symmetry: {this.state.user.symmetryHorizontal}</li>
-                  <li>vertical symmetry: {this.state.user.symmetryVertical}</li>
-                  <li>alignment: {this.state.user.alignment}</li>
-                  <li>angle between components: {this.state.user.componentAngleDiff}</li>
-                  <li>negative space: {this.state.user.negativeSpace}</li>
+                  <li>horizontal symmetry: {this.state.symmetryHorizontal}</li>
+                  <li>vertical symmetry: {this.state.symmetryVertical}</li>
+                  <li>alignment: {this.state.alignment}</li>
+                  <li>angle between components: {this.state.componentAngleDiff}</li>
+                  <li>negative space: {this.state.negativeSpace}</li>
                 </ul>
               </div>
             </div>

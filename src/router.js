@@ -6,7 +6,7 @@ import DesignerSide from "./DesignerSide";
 
 function App() {
   return (
-    <Router basename="/ConCreate-web">
+    <Router basename="/">
       <Switch>
         <Route exact path="/" component={EndUser} />
         <Route exact path="/designer" component={DesignerSide} />

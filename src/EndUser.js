@@ -27,6 +27,8 @@ import BiPalette from '@meronex/icons/bi/BiPalette';
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
 const logoUrl = 'https://assets.codepen.io/3/kiwi.svg';
 
+
+
 class EndUser extends React.Component {
   constructor(props) {
     super(props);
@@ -201,6 +203,11 @@ class EndUser extends React.Component {
     setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
     myFonts.map(fontOject => addGlobalFont(fontOject))
 
+    document.addEventListener('click', function(){
+      const jsonToSend = store.toJSON();
+      socket.emit('change', jsonToSend);
+    });
+
     //Palette Section Panel
     const CustomSection = {
       name: 'custom',
@@ -313,6 +320,7 @@ class EndUser extends React.Component {
                 width='100'
                 src = {logoUrl}
                 onClick={() => {store.activePage?.addElement(this.state.logo)}}
+                alt = 'logo'
               />
             </div>
             <div className='motif-section'>
@@ -322,6 +330,7 @@ class EndUser extends React.Component {
                 height='100'
                 src = {motifUrl}
                 onClick={() => {store.activePage?.addElement(this.state.graphicMotif)}}
+                alt = 'motif'
               />
             </div>
           </div>
