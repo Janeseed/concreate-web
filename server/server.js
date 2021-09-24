@@ -17,8 +17,6 @@ var io = require('socket.io')(server,{
   }
 })
 
-
-//json 파일 형식에서 일단 계산하는 것 만들기
 function CalTextSize (json) {
 
   const childrenList = json.pages[0].children;
@@ -39,10 +37,40 @@ function CalTextSize (json) {
   return [minText, maxText];
 }
 
-function GetGap() {
+function GetGap(json) {
+  const childrenList = json.pages[0].children;
   const componentGap = [];
-  //각 component의 중심점 찾아내기
-  //중심점끼리의 거리 찾아내기
+
+  // Step1. 각 component의 중심점 찾아내기
+  const centerPoints = [];
+  for (i in childrenList) {
+    // get numeric data from json file ([x,y]의 범위: [1,1] ~ [1080, 1080])
+    const x = childrenList[i].x;
+    const y = childrenList[i].y;
+    const rot = childrenList[i].rotation;
+    const w = childrenList[i].width;
+    const h = childrenList[i].height;
+    
+    const centerPoint = [];
+    // calculate the movement
+    const a = (Math.sqrt(Math.pow(h, 2) + Math.pow(w, 2))/2)*Math.cos(rot + Math.atan2(h, w));
+    const b = (Math.sqrt(Math.pow(h, 2) + Math.pow(w, 2))/2)*Math.sin(rot + Math.atan2(h, w));
+    // calculate the center point and push it into array
+    centerPoint.push(x + a);
+    centerPoint.push(y + b);
+    centerPoints.push(centerPoint); 
+  }
+  
+  // Step2. 중심점끼리의 거리 찾아내기
+  for (let x=0; x < centerPoints.length-1; x++) {
+    const center1 = centerPoints[x];
+    const center2 = centerPoints[x+1];
+    const diff = Math.sqrt(Math.pow(center1[0]-center2[0], 2) + Math.pow(center1[1]-center2[1], 2)).toFixed(0);
+    componentGap.push(diff);
+  }
+  return componentGap;
+
+  // Step3. 기존의 선택된 데이터의 값이랑 비교하기? OR 균일한지 아닌지 확인하기
 }
 
 function CalAngleLevel(json) {
@@ -76,12 +104,26 @@ function CalAngleLevel(json) {
   }
 }
 
+function CalAlignment() {
+  const json = JSON.parse(fs.readFileSync('./send.json'));
+  const childrenList = json.pages[0].children;
+  // Step1. text element를 모두 가져오기 -> text element만 확인하는 이유: svg element는 나중에 negative space나 symmetry에서 확인할 수 있을 듯
+  // Step2. 가져온 text element의 좌,우,가운데 정렬 확인
+  // Step3. 좌, 우, 가운데 정렬의 시작 위치 확인, 90도 돌렸는지 확인
+
+}
+
 io.on('connection', socket =>{
   console.log("New client connected");
   socket.on('change', data => {
     const angleResult = CalAngleLevel(data);
     const textResult = CalTextSize(data);
-    const result = {angleResult: angleResult, textResult: textResult};
+    const componentGap = GetGap(data);
+    const result = {
+      angleResult: angleResult,
+      textResult: textResult,
+      componentGap: componentGap
+    };
     io.emit('show', result);
   });
   socket.on('requestJson', data => {

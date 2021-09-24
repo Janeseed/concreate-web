@@ -142,6 +142,7 @@ class DesignerSide extends React.Component {
       textSize: 0,
       symmetryHorizontal: 0,
       symmetryVertical: 0,
+      gapBetweenComponents: '',
       alignment: 0,
       componentAngleDiff: 0,
       negativeSpace: 0,
@@ -176,7 +177,11 @@ class DesignerSide extends React.Component {
       store.loadJSON(data, true);
     });
     socket.on('show', data => {
-      this.setState({componentAngleDiff: data.angleResult, textSize: data.textResult});
+      this.setState({
+        componentAngleDiff: data.angleResult,
+        textSize: data.textResult,
+        gapBetweenComponents: data.componentGap,
+      });
     });
   };
 
@@ -191,7 +196,11 @@ class DesignerSide extends React.Component {
       store.loadJSON(data, true);
     });
     socket.on('show', data => {
-      this.setState({componentAngleDiff: data.angleResult, textSize: data.textResult});
+      this.setState({
+        componentAngleDiff: data.angleResult,
+        textSize: data.textResult,
+        gapBetweenComponents: data.componentGap,
+      });
     });
   }
 
@@ -376,6 +385,7 @@ class DesignerSide extends React.Component {
                 <ul>
                   <li>horizontal symmetry: {this.state.symmetryHorizontal}</li>
                   <li>vertical symmetry: {this.state.symmetryVertical}</li>
+                  <li>Gap between components: {this.state.gapBetweenComponents}</li>
                   <li>alignment: {this.state.alignment}</li>
                   <li>angle between components: {this.state.componentAngleDiff}</li>
                   <li>negative space: {this.state.negativeSpace}</li>
