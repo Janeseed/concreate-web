@@ -1,6 +1,7 @@
 const app = require('express')()
 var server = require('http').createServer(app);
 var cors = require('cors');
+const e = require('express');
 const fs = require('fs');
 const math = require('mathjs');
 
@@ -24,7 +25,7 @@ function CalTextSize (json) {
   const textSizes = [];
 
   for (let x in childrenList) {
-    if (childrenList[x].type == "text") {
+    if (childrenList[x].type === "text") {
       textSizes.push(childrenList[x].fontSize);
     };
   };
@@ -104,13 +105,100 @@ function CalAngleLevel(json) {
   }
 }
 
-function CalAlignment() {
-  const json = JSON.parse(fs.readFileSync('./send.json'));
+function CalAlignment(json) {
   const childrenList = json.pages[0].children;
-  // Step1. text element를 모두 가져오기 -> text element만 확인하는 이유: svg element는 나중에 negative space나 symmetry에서 확인할 수 있을 듯
-  // Step2. 가져온 text element의 좌,우,가운데 정렬 확인
-  // Step3. 좌, 우, 가운데 정렬의 시작 위치 확인, 90도 돌렸는지 확인
 
+  const rightAlign = [];
+  const centerAlign = [];
+  const leftAlign = [];
+  const rotAlign = [];
+
+  // Step1. text element를 모두 가져오기 -> text element만 확인하는 이유: svg element는 나중에 negative space나 symmetry에서 확인할 수 있을 듯
+  for (i in childrenList) {
+    if (childrenList[i].type === 'text') {
+      const alignData = {
+        alignment: childrenList[i].align,
+        x: childrenList[i].x,
+        y: childrenList[i].y,
+        width: childrenList[i].width,
+        rot: childrenList[i].rotation,
+        id: childrenList[i].id,
+      }
+      // Step2. 가져온 text element의 좌,우,가운데 정렬, 90도 돌아갔는지 확인
+      if (alignData.rot === 0) {
+        if (alignData.alignment === 'center') {
+          centerAlign.push(alignData);
+        } else if (alignData.alignment === 'right') {
+          rightAlign.push(alignData);
+        } else if (alignData.alignment === 'left') {
+          leftAlign.push(alignData);
+        }
+      } else {
+        rotAlign.push(alignData);
+      }
+    }
+  }
+
+  const numAlign = {
+    left: leftAlign.length,
+    right: rightAlign.length,
+    center: centerAlign.length,
+    rotated: rotAlign.length,
+  }
+
+  // Step3. main alignment를 찾고 변주가 있는지 확인하기
+  let arr = Object.values(numAlign);
+  const countZero = arr.filter(x => x==0).length;
+
+  // const yValues = [];
+  if (Math.max(...arr) > 2 || countZero >= 3) {
+    var mainAlign = Object.keys(numAlign).find(key => numAlign[key] === Math.max(...arr));
+    var xValues =[];
+    if (mainAlign === 'left') {
+      for (i in leftAlign) {
+        xValues.push(leftAlign[i].x.toFixed(0));
+        // yValues.push(leftAlign[i].y.toFixed(0));
+      }
+    } else if (mainAlign === 'right') {
+      for (i in rightAlign) {
+        xValues.push((rightAlign[i].x + rightAlign[i].width).toFixed(0));
+        // yValues.push(rightAlign[i].y.toFixed(0));
+      }
+    } else if (mainAlign === 'center') {
+      for (i in centerAlign) {
+        xValues.push((centerAlign[i].x + centerAlign[i].width/2).toFixed(0));
+        // yValues.push(centerAlign[i].y).toFixed(0);
+      }
+    }
+  } else {
+    var mainAlign = 'diverse';
+
+    const leftXValues = [];
+    const rightXValues = [];
+    const centerXValues = [];
+    const rotatedXValues = [];
+
+    for (i in leftAlign) {leftXValues.push(leftAlign[i].x.toFixed(0));}
+    for (i in rightAlign) {rightXValues.push((rightAlign[i].x + rightAlign[i].width).toFixed(0));}
+    for (i in centerAlign) {centerXValues.push((centerAlign[i].x + centerAlign[i].width/2).toFixed(0));}
+    for (i in rotAlign) {rotatedXValues.push(rotAlign[i].x.toFixed(0));}
+
+    var xValues = {
+      left: leftXValues,
+      right: rightXValues,
+      center: centerXValues,
+      rotated: rotatedXValues,
+    }
+  }
+
+  return {
+    'Aligning to: ' : mainAlign,
+    'Aligning Values' : xValues,
+  }
+}
+
+function CalNegativeSpace() {
+  
 }
 
 io.on('connection', socket =>{
@@ -119,10 +207,12 @@ io.on('connection', socket =>{
     const angleResult = CalAngleLevel(data);
     const textResult = CalTextSize(data);
     const componentGap = GetGap(data);
+    const alignment = CalAlignment(data);
     const result = {
       angleResult: angleResult,
       textResult: textResult,
-      componentGap: componentGap
+      componentGap: componentGap,
+      alignment: alignment,
     };
     io.emit('show', result);
   });

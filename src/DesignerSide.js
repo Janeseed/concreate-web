@@ -143,7 +143,7 @@ class DesignerSide extends React.Component {
       symmetryHorizontal: 0,
       symmetryVertical: 0,
       gapBetweenComponents: '',
-      alignment: 0,
+      alignment: '',
       componentAngleDiff: 0,
       negativeSpace: 0,
       descriptionToSee: '',
@@ -181,6 +181,7 @@ class DesignerSide extends React.Component {
         componentAngleDiff: data.angleResult,
         textSize: data.textResult,
         gapBetweenComponents: data.componentGap,
+        alignment: JSON.stringify(data.alignment),
       });
     });
   };
@@ -200,6 +201,7 @@ class DesignerSide extends React.Component {
         componentAngleDiff: data.angleResult,
         textSize: data.textResult,
         gapBetweenComponents: data.componentGap,
+        alignment: JSON.stringify(data.alignment),
       });
     });
   }
