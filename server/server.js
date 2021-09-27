@@ -32,10 +32,13 @@ function CalTextSize (json) {
 
   textSizes.sort(function(a,b){return a-b});
 
-  const minText = textSizes[0];
-  const maxText = textSizes[textSizes.length-1];
+  const minText = (textSizes[0]).toFixed(1);
+  const maxText = (textSizes[textSizes.length-1]).toFixed(1);
 
-  return [minText, maxText];
+  return {
+    minText: minText,
+    maxText: maxText,
+  };
 }
 
 function GetGap(json) {
@@ -101,7 +104,10 @@ function CalAngleLevel(json) {
   } else {
     //if there are less than 2 types of angles, show average of angles
     const message = 'Angles are similar';
-    return [message, average(angles).toFixed(2)]
+    return {
+      message: message,
+      averageAngle: average(angles).toFixed(2),
+    }
   }
 }
 
@@ -197,8 +203,61 @@ function CalAlignment(json) {
   }
 }
 
-function CalNegativeSpace() {
+function CalNegativeSpace(json) {
+  const childrenList = json.pages[0].children;
+
+  // 겹치는지 확인하기 위해 시작점이랑 width, height 구하기, x를 기준으로 정렬하기!
+  var childrenData = [];
+  for (let i in childrenList) {
+    childrenData.push({
+      x: childrenList[i].x,
+      y: childrenList[i].y,
+      width: childrenList[i].width,
+      height: childrenList[i].height
+    });
+  }
   
+  var negativeSpace = 1080*1080;
+  for (let i in childrenData) {
+    // 요소의 값 제외하기
+    const childrenSpace = childrenData[i].width*childrenData[i].height;
+    negativeSpace -= childrenSpace;
+    
+    for (let j = 0; j < childrenData.length-1; j++) {
+      const x = childrenData[j].x;
+      const y = childrenData[j].y;
+      const w = childrenData[j].width;
+      const h = childrenData[j].height;
+      const X = childrenData[i].x;
+      const Y = childrenData[i].y;
+      const W = childrenData[i].width;
+      const H = childrenData[i].height;
+
+      // 만약 겹치는 값이 있으면 겹치는 부분은 다시 더함
+      if(i != j) {
+        if (w > W) {
+          if (x <= X && X <= x+w && y <= Y && Y <= y+h){
+            const overlap = math.abs(x+w-X)*math.abs(Y-(y+h));
+            negativeSpace += overlap;
+          } else if (x <= X+W && X+W < x+w && y <= Y+H && Y+H <= y+h) {
+            const overlap = math.abs(x+w-X)*math.abs(Y+H-y);
+            negativeSpace += overlap;
+          }
+        } else {
+
+        }
+      }
+    }
+  }
+
+  const NSpercent = (negativeSpace/(1080*1080)*100).toFixed(2);
+  //percent로 바꿔서 보내기
+  return NSpercent 
+}
+
+function CalVerticalSymmetry() {
+  const json = JSON.parse(fs.readFileSync('./send.json'));
+  const childrenList = json.pages[0].children;
 }
 
 io.on('connection', socket =>{
@@ -208,11 +267,13 @@ io.on('connection', socket =>{
     const textResult = CalTextSize(data);
     const componentGap = GetGap(data);
     const alignment = CalAlignment(data);
+    const negativeSpace = CalNegativeSpace(data);
     const result = {
       angleResult: angleResult,
       textResult: textResult,
       componentGap: componentGap,
       alignment: alignment,
+      negativeSpace: negativeSpace,
     };
     io.emit('show', result);
   });

@@ -178,10 +178,11 @@ class DesignerSide extends React.Component {
     });
     socket.on('show', data => {
       this.setState({
-        componentAngleDiff: data.angleResult,
-        textSize: data.textResult,
-        gapBetweenComponents: data.componentGap,
+        componentAngleDiff: JSON.stringify(data.angleResult),
+        textSize: JSON.stringify(data.textResult),
+        gapBetweenComponents: JSON.stringify(data.componentGap),
         alignment: JSON.stringify(data.alignment),
+        negativeSpace: data.negativeSpace,
       });
     });
   };
@@ -198,10 +199,11 @@ class DesignerSide extends React.Component {
     });
     socket.on('show', data => {
       this.setState({
-        componentAngleDiff: data.angleResult,
-        textSize: data.textResult,
-        gapBetweenComponents: data.componentGap,
+        componentAngleDiff: JSON.stringify(data.angleResult),
+        textSize: JSON.stringify(data.textResult),
+        gapBetweenComponents: JSON.stringify(data.componentGap),
         alignment: JSON.stringify(data.alignment),
+        negativeSpace: data.negativeSpace,
       });
     });
   }
