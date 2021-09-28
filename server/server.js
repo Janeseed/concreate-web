@@ -1,9 +1,10 @@
 const app = require('express')()
 var server = require('http').createServer(app);
-var cors = require('cors');
-const e = require('express');
 const fs = require('fs');
-const math = require('mathjs');
+const got = require('got');
+const sharpStream = sharp({
+  failOnError: false
+});
 
 const port = process.env.PORT || 3002;
 
@@ -26,14 +27,14 @@ function CalTextSize (json) {
 
   for (let x in childrenList) {
     if (childrenList[x].type === "text") {
-      textSizes.push(childrenList[x].fontSize);
+      textSizes.push(childrenList[x].fontSize.toFixed(1));
     };
   };
 
   textSizes.sort(function(a,b){return a-b});
 
-  const minText = (textSizes[0]).toFixed(1);
-  const maxText = (textSizes[textSizes.length-1]).toFixed(1);
+  const minText = textSizes[0];
+  const maxText = textSizes[textSizes.length-1];
 
   return {
     minText: minText,
@@ -237,10 +238,10 @@ function CalNegativeSpace(json) {
       if(i != j) {
         if (w > W) {
           if (x <= X && X <= x+w && y <= Y && Y <= y+h){
-            const overlap = math.abs(x+w-X)*math.abs(Y-(y+h));
+            const overlap = Math.abs(x+w-X)*Math.abs(Y-(y+h));
             negativeSpace += overlap;
           } else if (x <= X+W && X+W < x+w && y <= Y+H && Y+H <= y+h) {
-            const overlap = math.abs(x+w-X)*math.abs(Y+H-y);
+            const overlap = Math.abs(x+w-X)*Math.abs(Y+H-y);
             negativeSpace += overlap;
           }
         } else {
@@ -253,11 +254,6 @@ function CalNegativeSpace(json) {
   const NSpercent = (negativeSpace/(1080*1080)*100).toFixed(2);
   //percent로 바꿔서 보내기
   return NSpercent 
-}
-
-function CalVerticalSymmetry() {
-  const json = JSON.parse(fs.readFileSync('./send.json'));
-  const childrenList = json.pages[0].children;
 }
 
 io.on('connection', socket =>{
@@ -277,6 +273,15 @@ io.on('connection', socket =>{
     };
     io.emit('show', result);
   });
+  // socket.on('changeImg', data => {
+  //   const verticalSymmetry = CalVerticalSymmetry(data);
+  //   const horizontalSymmetry = CalHorizontalSymmetry(data);
+  //   const result ={
+  //     verticalSymmetry: verticalSymmetry,
+  //     horizontalSymmetry: horizontalSymmetry,
+  //   };
+  //   io.emit('showSymm', result);
+  // })
   socket.on('requestJson', data => {
     io.emit('requestJson', data);
     console.log('requestJson');

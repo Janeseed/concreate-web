@@ -134,7 +134,7 @@ class EndUser extends React.Component {
         flipX: false,
         flipY: false,
       },
-      imageSrcUrl: null,
+      imgSrcURL: null,
       jsonFromDesigner: null,
       colorScore: 0,
       textScore: 0,
@@ -206,6 +206,8 @@ class EndUser extends React.Component {
     document.addEventListener('click', function(){
       const jsonToSend = store.toJSON();
       socket.emit('change', jsonToSend);
+      const imageToSend = store.toDataURL();
+      socket.emit('changeImg', imageToSend);
     });
 
     //Palette Section Panel
