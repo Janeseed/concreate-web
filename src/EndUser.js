@@ -7,25 +7,29 @@ import { SketchPicker, CirclePicker } from 'react-color';
 import io from 'socket.io-client';
 //import polotno libraries
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
-import { ElementsSection } from 'polotno/side-panel';
-import { SectionTab, SidePanel } from 'polotno/side-panel';
+import { SidePanel } from 'polotno/side-panel';
 import Workspace from 'polotno/canvas/workspace';
 import { createStore } from 'polotno/model/store';
 import { Toolbar } from 'polotno/toolbar/toolbar';
-import { addGlobalFont, setGoogleFonts } from 'polotno/config';
+import { unstable_registerNextDomDrop } from 'polotno/config';
 
 //import parts of UIs
 import './index.css';
-import myFonts from './fonts';
 import './textToolbar';
 import './svgToolbar';
 
-// import icon
-import BiPalette from '@meronex/icons/bi/BiPalette';
-
 //import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
-const logoUrl = 'https://assets.codepen.io/3/kiwi.svg';
+
+const logoUrl = process.env.PUBLIC_URL + 'muwieWordmark.svg';
+const logoUrl2 = process.env.PUBLIC_URL + 'brandLogo-03.svg';
+const logoUrl3 = process.env.PUBLIC_URL + 'brandLogo-04.svg';
+const logoUrl4 = process.env.PUBLIC_URL + 'brandLogo-05.svg';
+
+const KRtitleURL = process.env.PUBLIC_URL + 'text-03.svg';
+const KRbodyURL = process.env.PUBLIC_URL + 'text-04.svg';
+const ENGtitleURL = process.env.PUBLIC_URL + 'text-05.svg';
+const ENGbodyURL = process.env.PUBLIC_URL + 'text-06.svg';
 
 
 
@@ -33,87 +37,11 @@ class EndUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      brandPersonalityKeywords: ['Fancy', 'Young', 'Playful'],
+      brandPersonalityKeywords: ['Truthful', 'Sincere', 'Comfortable'],
       backgroundColor: '#ffffff',
-      titleStyleKR: {
-        // default value of text inputs
-        type: 'text',
-        x: 100,
-        y: 100,
-        text: '키위커피 타이틀 입력',
-        fontSize: 102,
-        fontFamily: '카페24써라운드에어',
-        fontStyle: 'normal', // can be normal or italic
-        fontWeight: 'bold', // can be normal or bold or some other CSS variations
-        fill: '#005508',
-        align: 'left',
-        width: 700,
-      },
-      bodyStyleKR: {
-        // default value of text inputs
-        type: 'text',
-        x: 100,
-        y: 350,
-        text: '입력할 내용을 작성하세요.',
-        fontSize: 52,
-        fontFamily: '카페24써라운드에어',
-        fontStyle: 'normal', // can be normal or italic
-        fontWeight: 'normal', // can be normal or bold or some other CSS variations
-        fill: 'black',
-        align: 'left',
-        width: 700,
-      },
-      titleStyleENG: {
-        // default value of text inputs
-        type: 'text',
-        x: 100,
-        y: 100,
-        text: 'Body Text Here',
-        fontSize: 102,
-        fontFamily: 'Playfair Display',
-        fontStyle: 'normal', // can be normal or italic
-        fontWeight: 'bold', // can be normal or bold or some other CSS variations
-        fill: '#005508',
-        align: 'left',
-        width: 700,
-      },
-      bodyStyleENG: {
-        // default value of text inputs
-        type: 'text',
-        x: 100,
-        y: 350,
-        text: 'Body Text Contents Here',
-        fontSize: 52,
-        fontFamily: 'Playfair Display',
-        fontStyle: 'normal', // can be normal or italic
-        fontWeight: 'normal', // can be normal or bold or some other CSS variations
-        fill: 'black',
-        align: 'left',
-        width: 700,
-      },
       primaryColor: ['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB'],
       secondaryColor: ['#FFB800', '#FF2525', '#614600'],
       neutralColor: ['#ffffff','#bfbfbf','#808080', '#404040', '#000000'],
-      logo: {
-        type: 'svg',
-        src: logoUrl,
-        maskSrc: '', // should we draw mask image over svg element?
-        keepRatio: true, // can we change aspect ration of svg?
-        x: 0,
-        y: 0,
-        rotation: 0,
-        locked: false,
-        blurEnabled: false,
-        blurRadius: 0,
-        brightnessEnabled: false,
-        brightness: 0,
-        shadowEnabled: false,
-        shadowBlur: 0,
-        width: 612,
-        height: 502.174,
-        flipX: false,
-        flipY: false,
-      },
       graphicMotif: {
         type: 'svg',
         src: motifUrl,
@@ -183,12 +111,21 @@ class EndUser extends React.Component {
     });
   };
   
-  componentWillUnmount() {
-    setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
-    myFonts.map(fontOject => addGlobalFont(fontOject))
-    
+  componentWillUnmount() {    
     const store = this.store;
     const socket = this.socket;
+
+    socket.on('sendDataURL', data => {
+      this.setState({imgSrcURL: data});
+    });
+
+    socket.on('sendJson', data => {
+      this.setState({
+        jsonFromDesigner: data,
+        IsChanged: !this.state.IsChanged
+      });
+    });
+
     socket.on('requestJson', () => {
       const requestedJson = store.toJSON();
       socket.emit('requestedJson', requestedJson);
@@ -198,95 +135,160 @@ class EndUser extends React.Component {
   render() {
     const store = this.store;
     const socket = this.socket;
-    
-    //set the fonts here
-    setGoogleFonts(['Roboto', 'Roboto Condensed', 'Anton', 'Tenor Sans', 'Krona One', 'Montserrat', 'Roboto Slab', 'EB Garamond', 'Abril Fatface', 'Playfair Display', 'Lora','Libre Baskerville', 'Cinzel', 'Arvo', 'Permanent Marker', 'Amatic SC', 'Great Vibes', 'Rock Salt', 'Cedarville Cursive']);
-    myFonts.map(fontOject => addGlobalFont(fontOject))
 
-    document.addEventListener('click', function(){
-      const jsonToSend = store.toJSON();
-      socket.emit('change', jsonToSend);
-      const imageToSend = store.toDataURL();
-      socket.emit('changeImg', imageToSend);
+    let timeout = null;
+    const requestSave = () => {
+      // if save is already requested - do nothing
+      if (timeout) {
+        return;
+      }
+      timeout = setTimeout(() => {
+        // reset timeout
+        timeout = null;
+        // export the design
+        const json = store.toJSON();
+        // const imageURL = store.toDataURL();
+        // save it to the backend
+        socket.emit('change', json);
+        // socket.emit('changeURL', imageURL);
+      })
+    }
+
+    //request saving operation on any changes
+    store.on('change', ()=> {
+      requestSave();
     });
 
     //Palette Section Panel
     const CustomSection = {
       name: 'custom',
-      Tab: (props) => (
-        <SectionTab name="Brand Palette" {...props}>
-          <BiPalette icon="new-text-box" />
-        </SectionTab>
-      ),
+      Tab: (props) => (<div></div>),
       // we need observer to update component automatically on any store changes
       Panel: observer(({ store }) => {
         return (
           <div>
-            <div className='BPSection'>
-              <h2>Brand Personality</h2>
-              <h4>Keyword: Fancy, Young, Playful</h4>
-              <p>
-                Nudake is a place where your dessert fantasies come alive.
-                We make the most unique desserts inspired by fashion, art,
-                and your own sweet dreams.
-              </p>
-            </div>
             <div className='textSection'>
               <h2>Text</h2>
-              <ButtonGroup style={{ minWidth: 200 }} vertical={true} alignText={'center'}>
-                <Button
-                  onClick={() => {store.activePage?.addElement(this.state.titleStyleKR);}}
-                  className='text-header'
-                >
-                  한글 제목
-                </Button>
-                <Button
-                  onClick={() => {store.activePage?.addElement(this.state.bodyStyleKR);}}
-                  className='text-body'
-                >
-                  한글 본문
-                </Button>
-                <Button
-                  onClick={() => {store.activePage?.addElement(this.state.titleStyleENG);}}
-                  className='text-header'
-                >
-                  Create English Header
-                </Button>
-                <Button
-                  onClick={() => {store.activePage?.addElement(this.state.bodyStyleENG);}}
-                  className='text-body'
-                >
-                  Create English Body Text
-                </Button>
-              </ButtonGroup>
+              <img
+                className='text'
+                width='50'
+                src = {KRtitleURL}
+                draggable = "true"
+                onDragStart={() => {
+                  unstable_registerNextDomDrop((pos, element) => {
+                    // "pos" - is relative mouse position of drop
+                    // "element" - is element from your store in case when DOM object is dropped on another element
+                    store.activePage.addElement({
+                      type: 'text',
+                      x: pos.x,
+                      y: pos.y,
+                      text: '무위 커피 제목 입력',
+                      fontSize: 72,
+                      fontFamily: 'Noto Sans KR',
+                      fontStyle: 'normal', // can be normal or italic
+                      fontWeight: 'bold', // can be normal or bold or some other CSS variations
+                      fill: '#414042',
+                      align: 'left',
+                      width: 700,
+                    })
+                  })
+                }}
+                onDragEnd={() => {
+                  unstable_registerNextDomDrop(null);
+                }}
+                alt = 'logo'
+              />
+              <img
+                className='text'
+                width='50'
+                src = {KRbodyURL}
+                draggable = "true"
+                onDragStart={() => {
+                  unstable_registerNextDomDrop((pos, element) => {
+                    // "pos" - is relative mouse position of drop
+                    // "element" - is element from your store in case when DOM object is dropped on another element
+                    store.activePage.addElement({
+                      type: 'text',
+                      x: pos.x,
+                      y: pos.y,
+                      text: '무위 커피는 꾸밈없이 꼭 필요한 것만 정성스럽게 담아내는 정직함을 추구합니다.',
+                      fontSize: 32,
+                      fontFamily: 'Noto Sans KR',
+                      fontStyle: 'normal', // can be normal or italic
+                      fontWeight: '300', // can be normal or bold or some other CSS variations
+                      fill: '#050505',
+                      align: 'left',
+                      width: 700,
+                    })
+                  })
+                }}
+                onDragEnd={() => {
+                  unstable_registerNextDomDrop(null);
+                }}
+                alt = 'logo'
+              />
+              <img
+                className='text'
+                width='50'
+                src = {ENGtitleURL}
+                draggable = "true"
+                onDragStart={() => {
+                  unstable_registerNextDomDrop((pos, element) => {
+                    // "pos" - is relative mouse position of drop
+                    // "element" - is element from your store in case when DOM object is dropped on another element
+                    store.activePage.addElement({
+                      type: 'text',
+                      x: pos.x,
+                      y: pos.y,
+                      text: 'Title Text Here',
+                      fontSize: 72,
+                      fontFamily: 'Poppins',
+                      fontStyle: 'normal', // can be normal or italic
+                      fontWeight: '600', // can be normal or bold or some other CSS variations
+                      fill: '#414042',
+                      align: 'left',
+                      width: 700,
+                    })
+                  })
+                }}
+                onDragEnd={() => {
+                  unstable_registerNextDomDrop(null);
+                }}
+                alt = 'logo'
+              />
+              <img
+                className='text'
+                width='45'
+                src = {ENGbodyURL}
+                draggable = "true"
+                onDragStart={() => {
+                  unstable_registerNextDomDrop((pos, element) => {
+                    // "pos" - is relative mouse position of drop
+                    // "element" - is element from your store in case when DOM object is dropped on another element
+                    store.activePage.addElement({
+                      type: 'text',
+                      x: pos.x,
+                      y: pos.y,
+                      text: 'Muwie delievers only the necessary goods and takes away additional embellishments',
+                      fontSize: 32,
+                      fontFamily: 'Poppins',
+                      fontStyle: 'normal', // can be normal or italic
+                      fontWeight: '200', // can be normal or bold or some other CSS variations
+                      fill: '#050505',
+                      align: 'left',
+                      width: 700,
+                    })
+                  })
+                }}
+                onDragEnd={() => {
+                  unstable_registerNextDomDrop(null);
+                }}
+                alt = 'logo'
+              />
+
             </div>
             <div className='background-section'>
-              <div style={{
-                }}>
-                <h2>Background Color</h2>
-                <div style={{
-                  margin: '10px',
-                }}>
-                <Popover2
-                  content={
-                  <SketchPicker
-                    color={store.activePage?.background}
-                    onChange = {this.handleBackColorChange}
-                    presetColors = {['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB', '#FFB800', '#FF2525', '#614600', '#ffffff','#bfbfbf','#808080', '#404040', '#000000']}
-                  />
-                  }
-                >
-                  <Button
-                    style = {{
-                      width: '80px',
-                      height: '80px',
-                      background: `${store.activePage?.background}`,
-                      border: '5px',
-                    }}
-                  />
-                </Popover2>
-                </div>
-              </div>
+              <h2>Background Color</h2>
               <div className="color-line">
                 <p className="color-line-title">Primary</p>
                 <CirclePicker
@@ -317,13 +319,108 @@ class EndUser extends React.Component {
             </div>
             <div className='logo-section'>
               <h2>Logo</h2>
-              <img
-                className='previewImage'
-                width='100'
-                src = {logoUrl}
-                onClick={() => {store.activePage?.addElement(this.state.logo)}}
-                alt = 'logo'
-              />
+              <div id='logoList'>
+                <img
+                  className='logo'
+                  width='80'
+                  src = {logoUrl}
+                  draggable = "true"
+                  onDragStart={() => {
+                    unstable_registerNextDomDrop((pos, element) => {
+                      // "pos" - is relative mouse position of drop
+                      // "element" - is element from your store in case when DOM object is dropped on another element
+                      store.activePage.addElement({
+                        type: 'svg',
+                        src: logoUrl,
+                        keepRatio: true,
+                        x: pos.x,
+                        y: pos.y,
+                        width: 180,
+                        height: 139.115,
+                      })
+                    })
+                  }}
+                  onDragEnd={() => {
+                    unstable_registerNextDomDrop(null);
+                  }}
+                  alt = 'logo'
+                />
+                <img
+                  className='logo'
+                  width='80'
+                  src = {logoUrl2}
+                  draggable = "true"
+                  onDragStart={() => {
+                    unstable_registerNextDomDrop((pos, element) => {
+                      // "pos" - is relative mouse position of drop
+                      // "element" - is element from your store in case when DOM object is dropped on another element
+                      store.activePage.addElement({
+                        type: 'svg',
+                        src: logoUrl2,
+                        keepRatio: true,
+                        x: pos.x,
+                        y: pos.y,
+                        width: 180,
+                        height: 102.777
+                      })
+                    })
+                  }}
+                  onDragEnd={() => {
+                    unstable_registerNextDomDrop(null);
+                  }}
+                  alt = 'logo'
+                />
+                <img
+                  className='logo'
+                  width='80'
+                  src = {logoUrl3}
+                  draggable = "true"
+                  onDragStart={() => {
+                    unstable_registerNextDomDrop((pos, element) => {
+                      // "pos" - is relative mouse position of drop
+                      // "element" - is element from your store in case when DOM object is dropped on another element
+                      store.activePage.addElement({
+                        type: 'svg',
+                        src: logoUrl3,
+                        keepRatio: true,
+                        x: pos.x,
+                        y: pos.y,
+                        width: 180,
+                        height: 25.664,
+                      })
+                    })
+                  }}
+                  onDragEnd={() => {
+                    unstable_registerNextDomDrop(null);
+                  }}
+                  alt = 'logo'
+                />
+                <img
+                  className='logo'
+                  width='80'
+                  src = {logoUrl4}
+                  draggable = "true"
+                  onDragStart={() => {
+                    unstable_registerNextDomDrop((pos, element) => {
+                      // "pos" - is relative mouse position of drop
+                      // "element" - is element from your store in case when DOM object is dropped on another element
+                      store.activePage.addElement({
+                        type: 'svg',
+                        src: logoUrl4,
+                        keepRatio: true,
+                        x: pos.x,
+                        y: pos.y,
+                        width: 180,
+                        height: 45.58,
+                      })
+                    })
+                  }}
+                  onDragEnd={() => {
+                    unstable_registerNextDomDrop(null);
+                  }}
+                  alt = 'logo'
+                />
+              </div>
             </div>
             <div className='motif-section'>
               <h2>Graphic Motifs</h2>
@@ -347,6 +444,15 @@ class EndUser extends React.Component {
       Panel: observer(({store}) => {
         return(
           <div>
+            <div className='BPSection'>
+              <h2>Brand Personality</h2>
+              <h4>Keyword: Fancy, Young, Playful</h4>
+              <p>
+                Nudake is a place where your dessert fantasies come alive.
+                We make the most unique desserts inspired by fashion, art,
+                and your own sweet dreams.
+              </p>
+            </div>
             <div id="recommendation-section">
               <h2>Recommendation</h2>
               <img
@@ -378,7 +484,7 @@ class EndUser extends React.Component {
     };
 
     //section을 지정해주는 곳
-    const sections = [CustomSection, ElementsSection];
+    const sections = [CustomSection];
     const estimateSections = [AiSection];
 
     return (

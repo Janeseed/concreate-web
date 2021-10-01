@@ -6,7 +6,6 @@ import { unstable_registerToolbarComponent } from 'polotno/config';
 import { SketchPicker } from 'react-color';
 
 import {
-  FontFamilyInput,
   FontSizeInput,
   FontStyleGroup,
   SpacingInput
@@ -74,7 +73,6 @@ const TextToolbar = observer(({store}) => {
           }}
         />
       </Popover2>
-      <FontFamilyInput store={store} element={element} />
       <FontSizeInput store={store} element={element}/>
       <FontStyleGroup store={store} element={element} />
       <SpacingInput store={store} element={element} />

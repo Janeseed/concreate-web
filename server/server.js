@@ -1,10 +1,7 @@
 const app = require('express')()
 var server = require('http').createServer(app);
 const fs = require('fs');
-const got = require('got');
-const sharpStream = sharp({
-  failOnError: false
-});
+const Jimp = require('jimp');
 
 const port = process.env.PORT || 3002;
 
@@ -256,6 +253,37 @@ function CalNegativeSpace(json) {
   return NSpercent 
 }
 
+// function CalHorzSymmetry(imgURL) {
+//   // 이미지 url로 가져오기
+//   const buf = Buffer.from(imgURL, 'base64');
+//   Jimp.read(buf, (err, image) => {
+//     if (err) {console.log(err)};
+//     const imageClone = image.clone();
+//     image.writeAsync('test.png');
+//   });
+  
+//   // const imageClone = image.clone();
+//   // const leftImg = await image.crop(0,0,1217,1696).writeAsync('Left.jpg');
+//   // const RightImg = await imageClone.flip(true,false).crop(0,0,1217,1696).writeAsync('Right.jpg');
+
+//   // var diff = Jimp.diff(leftImg, RightImg);
+//   // const result = (diff.percent*100).toFixed(1);
+//   // return result;
+// }
+
+// function CalVerSymmetry(imgURL) {
+//   // 이미지 url로 가져오기
+//   return imgURL;
+//   // const image = Jimp.read(imgURL);
+//   // const imageClone = image.clone();
+//   // const topImg = await image.crop(0,0,2434,848).writeAsync('top.jpg').catch(e => {console.log(e)});
+//   // const bottomImg = await imageClone.flip(false,true).crop(0,0,2434,848).writeAsync('bottom.jpg').catch(e => {console.log(e)});
+  
+//   // var diff = Jimp.diff(topImg, bottomImg);
+//   // const result = (diff.percent*100).toFixed(1);
+//   // return result;
+// }
+
 io.on('connection', socket =>{
   console.log("New client connected");
   socket.on('change', data => {
@@ -273,14 +301,8 @@ io.on('connection', socket =>{
     };
     io.emit('show', result);
   });
-  // socket.on('changeImg', data => {
-  //   const verticalSymmetry = CalVerticalSymmetry(data);
-  //   const horizontalSymmetry = CalHorizontalSymmetry(data);
-  //   const result ={
-  //     verticalSymmetry: verticalSymmetry,
-  //     horizontalSymmetry: horizontalSymmetry,
-  //   };
-  //   io.emit('showSymm', result);
+  // socket.on('changeURL', data => {
+  //   CalHorzSymmetry(data);
   // })
   socket.on('requestJson', data => {
     io.emit('requestJson', data);
