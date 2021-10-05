@@ -30,3 +30,34 @@ li {
   font-size: 20pt;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.text-grid {
+  display: flex;
+  flex-direction: row;
+}
+
+.text-input {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  margin: 4px;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  justify-content: center;
+}
+
+#logo-grid {
+  display: flex;
+}
+
+.logo-input {
+  display: flex;
+  width: 90px;
+  height: 80px;
+  margin: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  align-items: center;
+  justify-content: center;
+}

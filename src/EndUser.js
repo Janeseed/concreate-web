@@ -1,9 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { Popover2 } from "@blueprintjs/popover2";
-import { SketchPicker, CirclePicker } from 'react-color';
+import { CompactPicker } from 'react-color';
 import io from 'socket.io-client';
 //import polotno libraries
 import { PolotnoContainer, SidePanelWrap, WorkspaceWrap } from 'polotno';
@@ -19,7 +17,7 @@ import './textToolbar';
 import './svgToolbar';
 
 //import svg urls
-const motifUrl = process.env.PUBLIC_URL + '/motif_example.svg';
+const motifUrl = process.env.PUBLIC_URL + '/motif_example-03.svg';
 
 const logoUrl = process.env.PUBLIC_URL + 'muwieWordmark.svg';
 const logoUrl2 = process.env.PUBLIC_URL + 'brandLogo-03.svg';
@@ -39,9 +37,11 @@ class EndUser extends React.Component {
     this.state = {
       brandPersonalityKeywords: ['Truthful', 'Sincere', 'Comfortable'],
       backgroundColor: '#ffffff',
-      primaryColor: ['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB'],
-      secondaryColor: ['#FFB800', '#FF2525', '#614600'],
-      neutralColor: ['#ffffff','#bfbfbf','#808080', '#404040', '#000000'],
+      colors: ['#414042', "#6d6e71", '#939598', '#bcbec0', '#e6e7e8', '#ffffff',
+        '#8f4f16', '#bf6a1e', "#db863c", '#e8a061', '#f5b682', '#ffffff',
+        '#c98d46', '#e6b277', '#ebc192', '#f2d3b1', '#f2e2d0', '#ffffff',
+        '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0', '#ffffff',
+        '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505', '#ffffff'],
       graphicMotif: {
         type: 'svg',
         src: motifUrl,
@@ -167,270 +167,274 @@ class EndUser extends React.Component {
       Panel: observer(({ store }) => {
         return (
           <div>
-            <div className='textSection'>
-              <h2>Text</h2>
-              <img
-                className='text'
-                width='50'
-                src = {KRtitleURL}
-                draggable = "true"
-                onDragStart={() => {
-                  unstable_registerNextDomDrop((pos, element) => {
-                    // "pos" - is relative mouse position of drop
-                    // "element" - is element from your store in case when DOM object is dropped on another element
-                    store.activePage.addElement({
-                      type: 'text',
-                      x: pos.x,
-                      y: pos.y,
-                      text: '무위 커피 제목 입력',
-                      fontSize: 72,
-                      fontFamily: 'Noto Sans KR',
-                      fontStyle: 'normal', // can be normal or italic
-                      fontWeight: 'bold', // can be normal or bold or some other CSS variations
-                      fill: '#414042',
-                      align: 'left',
-                      width: 700,
-                    })
-                  })
-                }}
-                onDragEnd={() => {
-                  unstable_registerNextDomDrop(null);
-                }}
-                alt = 'logo'
-              />
-              <img
-                className='text'
-                width='50'
-                src = {KRbodyURL}
-                draggable = "true"
-                onDragStart={() => {
-                  unstable_registerNextDomDrop((pos, element) => {
-                    // "pos" - is relative mouse position of drop
-                    // "element" - is element from your store in case when DOM object is dropped on another element
-                    store.activePage.addElement({
-                      type: 'text',
-                      x: pos.x,
-                      y: pos.y,
-                      text: '무위 커피는 꾸밈없이 꼭 필요한 것만 정성스럽게 담아내는 정직함을 추구합니다.',
-                      fontSize: 32,
-                      fontFamily: 'Noto Sans KR',
-                      fontStyle: 'normal', // can be normal or italic
-                      fontWeight: '300', // can be normal or bold or some other CSS variations
-                      fill: '#050505',
-                      align: 'left',
-                      width: 700,
-                    })
-                  })
-                }}
-                onDragEnd={() => {
-                  unstable_registerNextDomDrop(null);
-                }}
-                alt = 'logo'
-              />
-              <img
-                className='text'
-                width='50'
-                src = {ENGtitleURL}
-                draggable = "true"
-                onDragStart={() => {
-                  unstable_registerNextDomDrop((pos, element) => {
-                    // "pos" - is relative mouse position of drop
-                    // "element" - is element from your store in case when DOM object is dropped on another element
-                    store.activePage.addElement({
-                      type: 'text',
-                      x: pos.x,
-                      y: pos.y,
-                      text: 'Title Text Here',
-                      fontSize: 72,
-                      fontFamily: 'Poppins',
-                      fontStyle: 'normal', // can be normal or italic
-                      fontWeight: '600', // can be normal or bold or some other CSS variations
-                      fill: '#414042',
-                      align: 'left',
-                      width: 700,
-                    })
-                  })
-                }}
-                onDragEnd={() => {
-                  unstable_registerNextDomDrop(null);
-                }}
-                alt = 'logo'
-              />
-              <img
-                className='text'
-                width='45'
-                src = {ENGbodyURL}
-                draggable = "true"
-                onDragStart={() => {
-                  unstable_registerNextDomDrop((pos, element) => {
-                    // "pos" - is relative mouse position of drop
-                    // "element" - is element from your store in case when DOM object is dropped on another element
-                    store.activePage.addElement({
-                      type: 'text',
-                      x: pos.x,
-                      y: pos.y,
-                      text: 'Muwie delievers only the necessary goods and takes away additional embellishments',
-                      fontSize: 32,
-                      fontFamily: 'Poppins',
-                      fontStyle: 'normal', // can be normal or italic
-                      fontWeight: '200', // can be normal or bold or some other CSS variations
-                      fill: '#050505',
-                      align: 'left',
-                      width: 700,
-                    })
-                  })
-                }}
-                onDragEnd={() => {
-                  unstable_registerNextDomDrop(null);
-                }}
-                alt = 'logo'
-              />
-
-            </div>
             <div className='background-section'>
-              <h2>Background Color</h2>
-              <div className="color-line">
-                <p className="color-line-title">Primary</p>
-                <CirclePicker
-                  colors={this.state.primaryColor}
-                  circleSize={20}
-                  circleSpacing={5}
-                  onChangeComplete = {this.handleBackColorChange}
-                />
-              </div>
-              <div className="color-line">
-                <p className="color-line-title">Secondary</p>
-                <CirclePicker
-                  colors={this.state.secondaryColor}
-                  circleSize={20}
-                  circleSpacing={5}
-                  onChangeComplete = {this.handleBackColorChange}
-                />
-              </div>
-              <div className="color-line">
-                <p className="color-line-title">Neutral</p>
-                <CirclePicker
-                  colors={this.state.neutralColor}
-                  circleSize={20}
-                  circleSpacing={5}
-                  onChangeComplete = {this.handleBackColorChange}
-                />
+              <h2 className='title'>Background Color</h2>
+              <CompactPicker
+                colors={this.state.colors}
+                onChangeComplete = {this.handleBackColorChange}
+              />
+            </div>
+            <div className='textSection'>
+              <h2 className="title">Text</h2>
+              <div className='text-grid'>
+                <div className='text-input'>
+                  <img
+                    width='50'
+                    src = {KRtitleURL}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'text',
+                          x: pos.x,
+                          y: pos.y,
+                          text: '무위 커피 제목 입력',
+                          fontSize: 72,
+                          fontFamily: 'Noto Sans KR',
+                          fontStyle: 'normal', // can be normal or italic
+                          fontWeight: 'bold', // can be normal or bold or some other CSS variations
+                          fill: '#414042',
+                          align: 'left',
+                          width: 700,
+                        })
+                      })
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
+                <div className='text-input'>
+                  <img
+                    width='50'
+                    src = {KRbodyURL}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'text',
+                          x: pos.x,
+                          y: pos.y,
+                          text: '무위 커피는 꾸밈없이 꼭 필요한 것만 정성스럽게 담아내는 정직함을 추구합니다.',
+                          fontSize: 32,
+                          fontFamily: 'Noto Sans KR',
+                          fontStyle: 'normal', // can be normal or italic
+                          fontWeight: '300', // can be normal or bold or some other CSS variations
+                          fill: '#050505',
+                          align: 'left',
+                          width: 700,
+                        })
+                      })
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
+                <div className='text-input'>
+                  <img
+                    width='50'
+                    src = {ENGtitleURL}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'text',
+                          x: pos.x,
+                          y: pos.y,
+                          text: 'Title Text Here',
+                          fontSize: 72,
+                          fontFamily: 'Poppins',
+                          fontStyle: 'normal', // can be normal or italic
+                          fontWeight: '600', // can be normal or bold or some other CSS variations
+                          fill: '#414042',
+                          align: 'left',
+                          width: 700,
+                        })
+                      })
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
+                <div className='text-input'>
+                  <img
+                    width='45'
+                    src = {ENGbodyURL}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'text',
+                          x: pos.x,
+                          y: pos.y,
+                          text: 'Muwie delievers only the necessary goods and takes away additional embellishments',
+                          fontSize: 32,
+                          fontFamily: 'Poppins',
+                          fontStyle: 'normal', // can be normal or italic
+                          fontWeight: '200', // can be normal or bold or some other CSS variations
+                          fill: '#050505',
+                          align: 'left',
+                          width: 700,
+                        })
+                      })
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
               </div>
             </div>
             <div className='logo-section'>
               <h2>Logo</h2>
-              <div id='logoList'>
-                <img
-                  className='logo'
-                  width='80'
-                  src = {logoUrl}
-                  draggable = "true"
-                  onDragStart={() => {
-                    unstable_registerNextDomDrop((pos, element) => {
-                      // "pos" - is relative mouse position of drop
-                      // "element" - is element from your store in case when DOM object is dropped on another element
-                      store.activePage.addElement({
-                        type: 'svg',
-                        src: logoUrl,
-                        keepRatio: true,
-                        x: pos.x,
-                        y: pos.y,
-                        width: 180,
-                        height: 139.115,
+              <div id='logo-grid'>
+                <div className="logo-input">
+                  <img
+                    width='70'
+                    src = {logoUrl}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'svg',
+                          src: logoUrl,
+                          keepRatio: true,
+                          x: pos.x,
+                          y: pos.y,
+                          width: 180,
+                          height: 139.115,
+                        })
                       })
-                    })
-                  }}
-                  onDragEnd={() => {
-                    unstable_registerNextDomDrop(null);
-                  }}
-                  alt = 'logo'
-                />
-                <img
-                  className='logo'
-                  width='80'
-                  src = {logoUrl2}
-                  draggable = "true"
-                  onDragStart={() => {
-                    unstable_registerNextDomDrop((pos, element) => {
-                      // "pos" - is relative mouse position of drop
-                      // "element" - is element from your store in case when DOM object is dropped on another element
-                      store.activePage.addElement({
-                        type: 'svg',
-                        src: logoUrl2,
-                        keepRatio: true,
-                        x: pos.x,
-                        y: pos.y,
-                        width: 180,
-                        height: 102.777
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
+                <div className="logo-input">
+                  <img
+                    width='70'
+                    src = {logoUrl2}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'svg',
+                          src: logoUrl2,
+                          keepRatio: true,
+                          x: pos.x,
+                          y: pos.y,
+                          width: 180,
+                          height: 102.777
+                        })
                       })
-                    })
-                  }}
-                  onDragEnd={() => {
-                    unstable_registerNextDomDrop(null);
-                  }}
-                  alt = 'logo'
-                />
-                <img
-                  className='logo'
-                  width='80'
-                  src = {logoUrl3}
-                  draggable = "true"
-                  onDragStart={() => {
-                    unstable_registerNextDomDrop((pos, element) => {
-                      // "pos" - is relative mouse position of drop
-                      // "element" - is element from your store in case when DOM object is dropped on another element
-                      store.activePage.addElement({
-                        type: 'svg',
-                        src: logoUrl3,
-                        keepRatio: true,
-                        x: pos.x,
-                        y: pos.y,
-                        width: 180,
-                        height: 25.664,
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
+                <div className="logo-input">
+                  <img
+                    width='70'
+                    src = {logoUrl3}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'svg',
+                          src: logoUrl3,
+                          keepRatio: true,
+                          x: pos.x,
+                          y: pos.y,
+                          width: 180,
+                          height: 35.535,
+                        })
                       })
-                    })
-                  }}
-                  onDragEnd={() => {
-                    unstable_registerNextDomDrop(null);
-                  }}
-                  alt = 'logo'
-                />
-                <img
-                  className='logo'
-                  width='80'
-                  src = {logoUrl4}
-                  draggable = "true"
-                  onDragStart={() => {
-                    unstable_registerNextDomDrop((pos, element) => {
-                      // "pos" - is relative mouse position of drop
-                      // "element" - is element from your store in case when DOM object is dropped on another element
-                      store.activePage.addElement({
-                        type: 'svg',
-                        src: logoUrl4,
-                        keepRatio: true,
-                        x: pos.x,
-                        y: pos.y,
-                        width: 180,
-                        height: 45.58,
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
+                <div className="logo-input">
+                  <img
+                    width='78'
+                    src = {logoUrl4}
+                    draggable = "true"
+                    onDragStart={() => {
+                      unstable_registerNextDomDrop((pos, element) => {
+                        // "pos" - is relative mouse position of drop
+                        // "element" - is element from your store in case when DOM object is dropped on another element
+                        store.activePage.addElement({
+                          type: 'svg',
+                          src: logoUrl4,
+                          keepRatio: true,
+                          x: pos.x,
+                          y: pos.y,
+                          width: 180,
+                          height: 45.58,
+                        })
                       })
-                    })
-                  }}
-                  onDragEnd={() => {
-                    unstable_registerNextDomDrop(null);
-                  }}
-                  alt = 'logo'
-                />
+                    }}
+                    onDragEnd={() => {
+                      unstable_registerNextDomDrop(null);
+                    }}
+                    alt = 'logo'
+                  />
+                </div>
               </div>
             </div>
             <div className='motif-section'>
               <h2>Graphic Motifs</h2>
               <img
-                className='previewImage'
-                height='100'
-                src = {motifUrl}
-                onClick={() => {store.activePage?.addElement(this.state.graphicMotif)}}
-                alt = 'motif'
-              />
+                  className='logo'
+                  width='80'
+                  src = {motifUrl}
+                  draggable = "true"
+                  onDragStart={() => {
+                    unstable_registerNextDomDrop((pos, element) => {
+                      // "pos" - is relative mouse position of drop
+                      // "element" - is element from your store in case when DOM object is dropped on another element
+                      store.activePage.addElement({
+                        type: 'svg',
+                        src: motifUrl,
+                        keepRatio: true,
+                        x: pos.x,
+                        y: pos.y,
+                        width: 282,
+                        height: 279,
+                      })
+                    })
+                  }}
+                  onDragEnd={() => {
+                    unstable_registerNextDomDrop(null);
+                  }}
+                  alt = 'logo'
+                />
             </div>
           </div>
         );
@@ -446,11 +450,11 @@ class EndUser extends React.Component {
           <div>
             <div className='BPSection'>
               <h2>Brand Personality</h2>
-              <h4>Keyword: Fancy, Young, Playful</h4>
+              <h4>Keyword: Truthful, Sincere, Comfortable</h4>
               <p>
-                Nudake is a place where your dessert fantasies come alive.
-                We make the most unique desserts inspired by fashion, art,
-                and your own sweet dreams.
+                Muwie Coffee is a honest and truthful coffee shop
+                delivering only necessary goods and taking away
+                additional embellishments.  
               </p>
             </div>
             <div id="recommendation-section">

@@ -3,12 +3,16 @@ import { observer } from 'mobx-react-lite';
 import { Navbar, Alignment, Button } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
 import { unstable_registerToolbarComponent } from 'polotno/config';
-import { SketchPicker } from 'react-color';
+import { CompactPicker } from 'react-color';
 
 
 export const SvgToolbar = observer(({store}) => {
   const element = store.selectedElements[0];
-  
+  const colors = ['#414042', "#6d6e71", '#939598', '#bcbec0', '#e6e7e8', '#ffffff',
+  '#8f4f16', '#bf6a1e', "#db863c", '#e8a061', '#f5b682', '#ffffff',
+  '#c98d46', '#e6b277', '#ebc192', '#f2d3b1', '#f2e2d0', '#ffffff',
+  '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0', '#ffffff',
+  '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505', '#ffffff'];
   return (
     <Navbar.Group align={Alignment.LEFT}>
       {!element.maskSrc &&
@@ -16,12 +20,12 @@ export const SvgToolbar = observer(({store}) => {
           return(
             <Popover2
               content={
-              <SketchPicker
+              <CompactPicker
                 color={element.colorsReplace.get(original) || original}
                 onChange = {(color) => {
                   element.replaceColor(original, color.hex);
                 }}
-                presetColors = {['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB', '#FFB800', '#FF2525', '#614600', '#ffffff','#bfbfbf','#808080', '#404040', '#000000']}
+                colors = {colors}
               />
               }
             >

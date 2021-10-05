@@ -1,8 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { Popover2 } from "@blueprintjs/popover2";
+import { Button } from '@blueprintjs/core';
 import { SketchPicker, CirclePicker } from 'react-color';
 import io from 'socket.io-client';
 //import polotno libraries
@@ -468,7 +467,6 @@ class DesignerSide extends React.Component {
               <div id="dseigner-side-scores">
                 <h3>text</h3>
                 <ul>
-                  <li>title typeface stroke: {this.state.titleStroke}</li>
                   <li>text size: {this.state.textSize}</li>
                 </ul>
                 <h3>layout</h3>

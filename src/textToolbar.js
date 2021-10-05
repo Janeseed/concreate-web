@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { NumericInput, Navbar, Alignment, Button } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
 import { unstable_registerToolbarComponent } from 'polotno/config';
-import { SketchPicker } from 'react-color';
+import { CompactPicker } from 'react-color';
 
 import {
   FontSizeInput,
@@ -13,6 +13,11 @@ import {
 
 const TextToolbar = observer(({store}) => {
   const element = store.selectedElements[0];
+  const colors = ['#414042', "#6d6e71", '#939598', '#bcbec0', '#e6e7e8', '#ffffff',
+  '#8f4f16', '#bf6a1e', "#db863c", '#e8a061', '#f5b682', '#ffffff',
+  '#c98d46', '#e6b277', '#ebc192', '#f2d3b1', '#f2e2d0', '#ffffff',
+  '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0', '#ffffff',
+  '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505', '#ffffff'];
   const textLineMenu = (
     <div
       style = {{
@@ -22,12 +27,12 @@ const TextToolbar = observer(({store}) => {
     >
       <Popover2
         content={
-        <SketchPicker
+        <CompactPicker
           color={element.stroke}
           onChange = {(color) => {
             element.set({ stroke: color.hex});
           }}
-          presetColors = {['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB', '#FFB800', '#FF2525', '#614600', '#ffffff','#bfbfbf','#808080', '#404040', '#000000']}
+          colors = {colors}
         />
         }
       >
@@ -55,12 +60,12 @@ const TextToolbar = observer(({store}) => {
     <Navbar.Group align={Alignment.LEFT}>
       <Popover2
         content={
-        <SketchPicker
+        <CompactPicker
           color={element.fill}
           onChange = {(color) => {
             element.set({ fill: color.hex});
           }}
-          presetColors = {['#005508', '#168621', "#9BDB68", '#BAF989', '#E2FFCB', '#FFB800', '#FF2525', '#614600', '#ffffff','#bfbfbf','#808080', '#404040', '#000000']}
+          colors = {colors}
         />
         }
       >
