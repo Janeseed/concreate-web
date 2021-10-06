@@ -204,53 +204,105 @@ function CalAlignment(json) {
 function CalNegativeSpace(json) {
   const childrenList = json.pages[0].children;
 
-  // 겹치는지 확인하기 위해 시작점이랑 width, height 구하기, x를 기준으로 정렬하기!
-  var childrenData = [];
+  var xCoords = [];
   for (let i in childrenList) {
-    childrenData.push({
-      x: childrenList[i].x,
-      y: childrenList[i].y,
-      width: childrenList[i].width,
-      height: childrenList[i].height
-    });
+    xCoords.push(childrenList[i].x);
+    xCoords.push(childrenList[i].x + childrenList[i].width);
   }
-  
-  var negativeSpace = 1080*1080;
-  for (let i in childrenData) {
-    // 요소의 값 제외하기
-    const childrenSpace = childrenData[i].width*childrenData[i].height;
-    negativeSpace -= childrenSpace;
-    
-    for (let j = 0; j < childrenData.length-1; j++) {
-      const x = childrenData[j].x;
-      const y = childrenData[j].y;
-      const w = childrenData[j].width;
-      const h = childrenData[j].height;
-      const X = childrenData[i].x;
-      const Y = childrenData[i].y;
-      const W = childrenData[i].width;
-      const H = childrenData[i].height;
 
-      // 만약 겹치는 값이 있으면 겹치는 부분은 다시 더함
-      if(i != j) {
-        if (w > W) {
-          if (x <= X && X <= x+w && y <= Y && Y <= y+h){
-            const overlap = Math.abs(x+w-X)*Math.abs(Y-(y+h));
-            negativeSpace += overlap;
-          } else if (x <= X+W && X+W < x+w && y <= Y+H && Y+H <= y+h) {
-            const overlap = Math.abs(x+w-X)*Math.abs(Y+H-y);
-            negativeSpace += overlap;
-          }
-        } else {
+  let new_xCoords = [...new Set(xCoords)]; //duplicated check
+  new_xCoords.sort(function(a, b) { //reorder
+    return a - b;
+  });
 
-        }
+  var new_rects = [];
+  for (let i in childrenList) {
+    var _xCoords = [];
+
+    _xCoords.push(childrenList[i].x);
+    for (let j in new_xCoords) {
+      if(childrenList[i].x + childrenList[i].width > new_xCoords[j] && childrenList[i].x < new_xCoords[j]){
+        _xCoords.push(new_xCoords[j]);
       }
+    }
+    _xCoords.push(childrenList[i].x  + childrenList[i].width);
+
+    for (var j = 0; j < _xCoords.length - 1; j++) {
+      new_rects.push({
+        x: _xCoords[j],
+        y: childrenList[i].y,
+        width: _xCoords[j+1] - _xCoords[j],
+        height: childrenList[i].height
+      });
     }
   }
 
-  const NSpercent = (negativeSpace/(1080*1080)*100).toFixed(2);
+  var xAlignedRects = []; //x & width 같은것 모은 array
+  while(new_rects.length > 0){
+    var _temp_rects = [];
+    var _idx = [];
+    for (let i in new_rects){
+      var x = new_rects[0].x;
+      var y = new_rects[0].y;
+      var h = new_rects[0].height;
+      var X = new_rects[i].x;
+      var Y = new_rects[i].y;
+      var H = new_rects[i].height;
+
+      if(x == X){
+        if(y > Y && y < Y+H){
+          _idx.push(i);
+        }else if(y+h > Y && y+h < Y+H){
+          _idx.push(i);
+        }
+      }
+
+      _idx.push(0);
+    }
+    let _newidx = [...new Set(_idx)]; //duplicated check
+    _newidx.sort(function(a, b) { //reorder
+      return a - b;
+    });
+
+    for(let j in _newidx){
+      _temp_rects.push(new_rects[_newidx[j]]);
+    }
+    for(let k in _newidx){
+      new_rects.splice(_newidx[k]-k,1);
+    }
+
+    xAlignedRects.push(_temp_rects);
+
+    _temp_rects = [];
+    _idx = [];
+  }
+
+
+  var finalRect = [];
+  for(let i in xAlignedRects){
+    var _minY = Number.POSITIVE_INFINITY;
+    var _maxY = 0;
+    for(let j in xAlignedRects[i]){
+      if(xAlignedRects[i][j].y < _minY) _minY = xAlignedRects[i][j].y;
+      if(xAlignedRects[i][j].y + xAlignedRects[i][j].height > _maxY) _maxY = xAlignedRects[i][j].y + xAlignedRects[i][j].height;
+    }
+
+    finalRect.push({
+      x: xAlignedRects[i][0].x,
+      y: _minY,
+      width: xAlignedRects[i][0].width,
+      height: _maxY-_minY
+    })
+  }
+
+  var sumRectArea = 0;
+  for(let i in finalRect){
+    sumRectArea = sumRectArea + (finalRect[i].width * finalRect[i].height);
+  }
+
+  const NSpercent = ((1-sumRectArea/(1080*1080))*100).toFixed(2);
   //percent로 바꿔서 보내기
-  return NSpercent 
+  return NSpercent; 
 }
 
 // function CalHorzSymmetry(imgURL) {
