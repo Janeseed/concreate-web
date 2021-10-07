@@ -19,13 +19,26 @@
   margin-left: 15px;
 }
 
+ul {
+  list-style-type: none;
+  padding-left: 2px;
+}
+
 li {
   font-size: 12pt;
   padding-bottom: 0.5rem;
 }
-.designer-buttons {
+
+li.alarm {
+  font-size: 14pt;
+  color: red;
+  font-weight: 500;
+}
+
+.designer-buttons,
+.user-buttons {
   margin: 7px;
-  width: 100px;
+  width: auto;
   height: 50px;
   font-size: 20pt;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -44,10 +57,10 @@ li {
 .text-input,
 .motif-input {
   display: flex;
-  width: 90px;
-  height: 80px;
+  width: 75px;
+  height: 70px;
   margin: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   align-items: center;
   justify-content: center;
@@ -58,8 +71,17 @@ li {
   width: 55px;
   height: 60px;
   margin: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   align-items: center;
   justify-content: center;
+}
+
+.bpImage {
+  margin: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.title-text {
+  font-size: 32;
 }

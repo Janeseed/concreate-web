@@ -15,6 +15,8 @@ import { unstable_registerNextDomDrop } from 'polotno/config';
 import './index.css';
 import './textToolbar';
 import './svgToolbar';
+import { Popover2 } from '@blueprintjs/popover2';
+import { Button } from '@blueprintjs/core';
 
 //import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/graphics-05.svg';
@@ -44,6 +46,17 @@ const shapes9 =  process.env.PUBLIC_URL + 'shapes-14.svg';
 const shapes10 =  process.env.PUBLIC_URL + 'shapes-15.svg';
 const shapes11 =  process.env.PUBLIC_URL + 'shapes-16.svg';
 
+//import image url
+const bpImage1 = process.env.PUBLIC_URL + '174.jpg';
+const bpImage2 = process.env.PUBLIC_URL + '246.jpg';
+const bpImage3 = process.env.PUBLIC_URL + '279.jpg';
+
+const christImage1 = process.env.PUBLIC_URL + '076.jpg';
+const christImage2 = process.env.PUBLIC_URL + '209.jpg';
+const christImage3 = process.env.PUBLIC_URL + '226.jpg';
+
+
+
 class EndUser extends React.Component {
   constructor(props) {
     super(props);
@@ -57,9 +70,12 @@ class EndUser extends React.Component {
         '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505', '#ffffff'],
       imgSrcURL: null,
       jsonFromDesigner: null,
-      colorScore: 0,
-      textScore: 0,
-      layoutScore: 0,
+      textSizeMax: 0,
+      textSizeMin: 0,
+      checkTextMax: true,
+      checkTextMin: true,
+      negativeSpace: 0,
+      checkNegativeSpace: true,
       IsChanged: false,
       changedReason: null,
     };
@@ -102,6 +118,17 @@ class EndUser extends React.Component {
         IsChanged: !this.state.IsChanged
       });
     });
+
+    socket.on('show', data => {
+      this.setState({
+        textSizeMax: data.textResult.maxText,
+        textSizeMin: data.textResult.minText,
+        checkTextMax: data.textResult.checkMax,
+        checkTextMin: data.textResult.checkMin,
+        negativeSpace: data.negativeSpace.NSpercent,
+        checkNegativeSpace: data.negativeSpace.checkNS,
+      });
+    });
   };
   
   componentWillUnmount() {    
@@ -122,6 +149,17 @@ class EndUser extends React.Component {
     socket.on('requestJson', () => {
       const requestedJson = store.toJSON();
       socket.emit('requestedJson', requestedJson);
+    });
+
+    socket.on('show', data => {
+      this.setState({
+        textSizeMax: data.textResult.maxText,
+        textSizeMin: data.textResult.minText,
+        checkTextMax: data.textResult.checkMax,
+        checkTextMin: data.textResult.checkMin,
+        negativeSpace: data.negativeSpace.NSpercent,
+        checkNegativeSpace: data.negativeSpace.checkNS,
+      });
     });
   }
 
@@ -406,7 +444,7 @@ class EndUser extends React.Component {
               <div id='motif-grid'>
                 <div className='motif-input'>
                   <img
-                    width='80'
+                    height='60'
                     src = {motifUrl}
                     draggable = "true"
                     onDragStart={() => {
@@ -432,7 +470,7 @@ class EndUser extends React.Component {
                 </div>
                 <div className='motif-input'>
                   <img
-                    width='80'
+                    height='60'
                     src = {motifUrl2}
                     draggable = "true"
                     onDragStart={() => {
@@ -458,7 +496,7 @@ class EndUser extends React.Component {
                 </div>
                 <div className='motif-input'>
                   <img
-                    height='80'
+                    height='60'
                     src = {motifUrl3}
                     draggable = "true"
                     onDragStart={() => {
@@ -484,7 +522,7 @@ class EndUser extends React.Component {
                 </div>
                 <div className='motif-input'>
                   <img
-                    height='80'
+                    height='60'
                     src = {motifUrl4}
                     draggable = "true"
                     onDragStart={() => {
@@ -550,7 +588,7 @@ class EndUser extends React.Component {
                         store.activePage.addElement({
                           type: 'svg',
                           src: shapes2,
-                          keepRatio: true,
+                          keepRatio: false,
                           x: pos.x,
                           y: pos.y,
                           width: 98,
@@ -804,37 +842,100 @@ class EndUser extends React.Component {
           <div>
             <div className='BPSection'>
               <h2>Brand Personality</h2>
-              <h4>Keyword: Truthful, Sincere, Comfortable</h4>
-              <p>
-                Muwie Coffee is a honest and truthful coffee shop
-                delivering only necessary goods and taking away
-                additional embellishments.  
-              </p>
+              <Popover2
+                content={
+                  <div>
+                    <p id='BPdescription'>
+                      Muwie Coffee is a honest and truthful coffee shop
+                      delivering only necessary goods and taking away
+                      additional embellishments.  
+                    </p>
+                    <div id='bpImages'>
+                      <p className='image-title'>BP examples</p>
+                      <p id='BPkeywords'>Keyword: Reliable, Sincere, Essential</p>
+                      <div className='image-grid'>
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={bpImage1}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={bpImage2}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={bpImage3}
+                        />
+                      </div>
+                    </div>
+                    <div id='christmasImage'>
+                      <p className='image-title'>Event Related examples</p>
+                      <p id='Chirstkeywords'>Keyword: Festive, Active, Friendly</p>
+                      <div className='image-grid'>
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={christImage1}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={christImage2}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={christImage3}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }
+                placement='auto'
+              >
+                <Button className="user-buttons">Show BP</Button>
+              </Popover2>
             </div>
             <div id="recommendation-section">
               <h2>Recommendation</h2>
               <img
                 id='previewImage'
-                width='300'
-                height='300'
+                width='200'
+                height='200'
                 src = {this.state.imgSrcURL}
-                onClick={() => {
-                  store.loadJSON(this.state.jsonFromDesigner, true);
-                  this.setState({IsChanged: !this.state.IsChanged});
-                }}
               />
               <div id="description">
-                <h3 style={{color: 'red'}}>{this.state.IsChanged ? "New Recommandation! Click the image to see change" : null}</h3>
-                <p>{this.state.IsChanged ? this.state.changedReason : null}</p>
+                <h3 style={{color: 'red'}}>{this.state.IsChanged ? "New Recommandation!" : null}</h3>
+                <div>
+                  {
+                    this.state.IsChanged ?
+                    <Button
+                      className = 'user-buttons'
+                      onClick={() => {
+                        store.loadJSON(this.state.jsonFromDesigner, true);
+                        this.setState({IsChanged: !this.state.IsChanged});
+                    }}>
+                      Apply
+                    </Button>
+                    : null
+                  }
+
+                </div>
               </div>
             </div>
             <div id="user-score-section">
-              <h2>Similarity Score</h2>
-              <div id="user-side-scores">
-                <p>color: {this.state.colorScore}</p>
-                <p>text: {this.state.textScore}</p>
-                <p>layout: {this.state.layoutScore}</p>
-              </div>
+              <h2>BP Estimation</h2>
+              <h3>text</h3>
+              <ul>
+                {this.state.checkTextMax&&this.state.checkTextMin ? <li>OK</li> : <li className='alarm'>OUT OF BP</li>}
+              </ul>
+              <h3>layout</h3>
+              <ul>
+                {this.state.checkNegativeSpace? <li>OK</li> : <li className='alarm'>OUT OF BP</li>}
+              </ul>
             </div>
           </div>
         );

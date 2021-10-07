@@ -32,10 +32,26 @@ function CalTextSize (json) {
 
   const minText = textSizes[0];
   const maxText = textSizes[textSizes.length-1];
+  var checkMin = true;
+  var checkMax = true;
+  
+  if (minText > 44) {
+    checkMin = false;
+  } else {
+    checkMin = true;
+  }
+
+  if (maxText > 90.5) {
+    checkMax= false;
+  } else {
+    checkMax = true;
+  }
 
   return {
     minText: minText,
+    checkMax: checkMax,
     maxText: maxText,
+    checkMin: checkMin,
   };
 }
 
@@ -81,7 +97,7 @@ function CalAngleLevel(json) {
   const childrenList = json.pages[0].children;
 
   for (let x in childrenList) {
-    const angle = childrenList[x].rotation;
+    const angle = (childrenList[x].rotation).toFixed(2);
     angles.push(angle);
   }
 
@@ -91,7 +107,7 @@ function CalAngleLevel(json) {
   for (let x =0; x < angles.length-1; x++) {
     if ( angles[x] != angles[x+1]) {
       const diff = angles[x+1]-angles[x];
-      differences.push(diff).toFixed(2);
+      differences.push(diff);
     }
   }
   
@@ -104,7 +120,7 @@ function CalAngleLevel(json) {
     const message = 'Angles are similar';
     return {
       message: message,
-      averageAngle: average(angles).toFixed(2),
+      averageAngle: average(angles),
     }
   }
 }
@@ -301,8 +317,17 @@ function CalNegativeSpace(json) {
   }
 
   const NSpercent = ((1-sumRectArea/(1080*1080))*100).toFixed(2);
+  var checkNS = true;
+  if ( NSpercent < 49.95) {
+    checkNS = false;
+  } else {
+    checkNS = true;
+  }
   //percent로 바꿔서 보내기
-  return NSpercent; 
+  return {
+    NSpercent: NSpercent,
+    checkNS: checkNS,
+  }; 
 }
 
 // function CalHorzSymmetry(imgURL) {
@@ -361,17 +386,17 @@ io.on('connection', socket =>{
     console.log('requestJson');
   });
   socket.on('requestedJson', data => {
-    fs.writeFile('./get.json', JSON.stringify(data), (err) => {
-      if (err) throw err;
-    });
-    console.log('requested json saved');
+    // fs.writeFile('./get.json', JSON.stringify(data), (err) => {
+    //   if (err) throw err;
+    // });
+    // console.log('requested json saved');
     io.emit('requestedJson', data);
     console.log('requestedJson');
   });
   socket.on('sendJson', data => {
-    fs.writeFile('./send.json', JSON.stringify(data), (err) => {
-      if (err) throw err;
-    });
+    // fs.writeFile('./send.json', JSON.stringify(data), (err) => {
+    //   if (err) throw err;
+    // });
     io.emit('sendJson', data);
     console.log('sendJson');
   });

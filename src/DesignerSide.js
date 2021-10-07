@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
-import { Button } from '@blueprintjs/core';
 import { CompactPicker } from 'react-color';
 import io from 'socket.io-client';
 //import polotno libraries
@@ -16,6 +15,9 @@ import { unstable_registerNextDomDrop } from 'polotno/config';
 import './index.css';
 import './textToolbar';
 import './svgToolbar';
+
+import { Popover2 } from '@blueprintjs/popover2';
+import { Button } from '@blueprintjs/core';
 
 //import svg urls
 const motifUrl = process.env.PUBLIC_URL + '/graphics-05.svg';
@@ -45,6 +47,15 @@ const shapes9 =  process.env.PUBLIC_URL + 'shapes-14.svg';
 const shapes10 =  process.env.PUBLIC_URL + 'shapes-15.svg';
 const shapes11 =  process.env.PUBLIC_URL + 'shapes-16.svg';
 
+//import image url
+const bpImage1 = process.env.PUBLIC_URL + '174.jpg';
+const bpImage2 = process.env.PUBLIC_URL + '246.jpg';
+const bpImage3 = process.env.PUBLIC_URL + '279.jpg';
+
+const christImage1 = process.env.PUBLIC_URL + '076.jpg';
+const christImage2 = process.env.PUBLIC_URL + '209.jpg';
+const christImage3 = process.env.PUBLIC_URL + '226.jpg';
+
 class DesignerSide extends React.Component {
   constructor(props) {
     super(props);
@@ -63,13 +74,17 @@ class DesignerSide extends React.Component {
       titleTypeface: '',
       titleStroke: 0,
       numTypeface: 0,
-      textSize: 0,
+      textSizeMax: 0,
+      textSizeMin: 0,
+      checkTextMax: true,
+      checkTextMin: true,
       symmetryHorizontal: 0,
       symmetryVertical: 0,
       gapBetweenComponents: '',
       alignment: '',
       componentAngleDiff: 0,
       negativeSpace: 0,
+      checkNegativeSpace: true,
       descriptionToSee: '',
       descriptionToSend: '',
     };
@@ -102,16 +117,12 @@ class DesignerSide extends React.Component {
     });
     socket.on('show', data => {
       this.setState({
-        componentAngleDiff: JSON.stringify(data.angleResult),
-        textSize: JSON.stringify(data.textResult),
-        gapBetweenComponents: JSON.stringify(data.componentGap),
-        alignment: JSON.stringify(data.alignment),
-        negativeSpace: data.negativeSpace,
-      });
-    });
-    socket.on('showSymm', data => {
-      this.setState({
-        symmetryHorizontal: data.horizSymmetry,
+        textSizeMax: data.textResult.maxText,
+        textSizeMin: data.textResult.minText,
+        checkTextMax: data.textResult.checkMax,
+        checkTextMin: data.textResult.checkMin,
+        negativeSpace: data.negativeSpace.NSpercent,
+        checkNegativeSpace: data.negativeSpace.checkNS,
       });
     });
   };
@@ -125,16 +136,12 @@ class DesignerSide extends React.Component {
     });
     socket.on('show', data => {
       this.setState({
-        componentAngleDiff: JSON.stringify(data.angleResult),
-        textSize: JSON.stringify(data.textResult),
-        gapBetweenComponents: JSON.stringify(data.componentGap),
-        alignment: JSON.stringify(data.alignment),
-        negativeSpace: data.negativeSpace,
-      });
-    });
-    socket.on('showSymm', data => {
-      this.setState({
-        symmetryHorizontal: data.horizSymmetry
+        textSizeMax: data.textResult.maxText,
+        textSizeMin: data.textResult.minText,
+        checkTextMax: data.textResult.checkMax,
+        checkTextMin: data.textResult.checkMin,
+        negativeSpace: data.negativeSpace.NSpercent,
+        checkNegativeSpace: data.negativeSpace.checkNS,
       });
     });
   }
@@ -397,7 +404,7 @@ class DesignerSide extends React.Component {
               <div id='motif-grid'>
                 <div className='motif-input'>
                   <img
-                    width='80'
+                    height='60'
                     src = {motifUrl}
                     draggable = "true"
                     onDragStart={() => {
@@ -423,7 +430,7 @@ class DesignerSide extends React.Component {
                 </div>
                 <div className='motif-input'>
                   <img
-                    width='80'
+                    height='60'
                     src = {motifUrl2}
                     draggable = "true"
                     onDragStart={() => {
@@ -449,7 +456,7 @@ class DesignerSide extends React.Component {
                 </div>
                 <div className='motif-input'>
                   <img
-                    height='80'
+                    height='60'
                     src = {motifUrl3}
                     draggable = "true"
                     onDragStart={() => {
@@ -475,7 +482,7 @@ class DesignerSide extends React.Component {
                 </div>
                 <div className='motif-input'>
                   <img
-                    height='80'
+                    height='60'
                     src = {motifUrl4}
                     draggable = "true"
                     onDragStart={() => {
@@ -795,14 +802,64 @@ class DesignerSide extends React.Component {
           <>
             <div className='BPSection'>
               <h2>Brand Personality</h2>
-              <h4>Keyword: Fancy, Young, Playful</h4>
-              <p>
-                Nudake is a place where your dessert fantasies come alive.
-                We make the most unique desserts inspired by fashion, art,
-                and your own sweet dreams.
-              </p>
+              <Popover2
+                content={
+                  <div>
+                    <p id='BPdescription'>
+                      Muwie Coffee is a honest and truthful coffee shop
+                      delivering only necessary goods and taking away
+                      additional embellishments.  
+                    </p>
+                    <div id='bpImages'>
+                      <p className='image-title'>BP examples</p>
+                      <p id='BPkeywords'>Keyword: Reliable, Sincere, Essential</p>
+                      <div className='image-grid'>
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={bpImage1}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={bpImage2}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={bpImage3}
+                        />
+                      </div>
+                    </div>
+                    <div id='christmasImage'>
+                      <p className='image-title'>Event Related examples</p>
+                      <p id='Chirstkeywords'>Keyword: Festive, Active, Friendly</p>
+                      <div className='image-grid'>
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={christImage1}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={christImage2}
+                        />
+                        <img
+                          className='bpImage'
+                          height='250'
+                          src={christImage3}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }
+                placement='auto'
+              >
+                <Button className="user-buttons">Show BP</Button>
+              </Popover2>
             </div>
-            <h2>File</h2>
+            <h2>Design Data</h2>
             <Button
               className="designer-buttons"
               onClick={() => {
@@ -827,20 +884,16 @@ class DesignerSide extends React.Component {
               SEND
             </Button>
             <div id="designer-score-section">
-              <h2>User Data</h2>
+              <h2>Numeric User Data</h2>
               <div id="dseigner-side-scores">
                 <h3>text</h3>
                 <ul>
-                  <li>text size: {this.state.textSize}</li>
+                  {this.state.checkTextMax ? <li>Max text size: {this.state.textSizeMax} pt</li> : <li className='alarm'>Max text size: OUT OF BP</li>}
+                  {this.state.checkTextMin ? <li>Min text size: {this.state.textSizeMin} pt</li> : <li className='alarm'>Min text size: OUT OF BP</li>}
                 </ul>
                 <h3>layout</h3>
                 <ul>
-                  <li>horizontal symmetry: {this.state.symmetryHorizontal}</li>
-                  <li>vertical symmetry: {this.state.symmetryVertical}</li>
-                  <li>Gap between components: {this.state.gapBetweenComponents}</li>
-                  <li>alignment: {this.state.alignment}</li>
-                  <li>angle between components: {this.state.componentAngleDiff}</li>
-                  <li>negative space: {this.state.negativeSpace}</li>
+                  {this.state.checkNegativeSpace? <li>Negative Space: {this.state.negativeSpace} %</li> : <li className='alarm'>Negative Space: OUT OF BP</li>}
                 </ul>
               </div>
             </div>
