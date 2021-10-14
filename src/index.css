@@ -82,6 +82,12 @@ li.alarm {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.title-text {
-  font-size: 32;
+p.BPdescription {
+  font-size: 14pt;
+}
+
+p.image-title,
+p.BPkeywords {
+  font-size: 16pt;
+  font-weight: bold;
 }

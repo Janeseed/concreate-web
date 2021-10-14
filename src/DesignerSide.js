@@ -805,14 +805,14 @@ class DesignerSide extends React.Component {
               <Popover2
                 content={
                   <div>
-                    <p id='BPdescription'>
+                    <p className='BPkeywords'>Keyword: Reliable, Sincere, Essential</p>
+                    <p className='BPdescription'>
                       Muwie Coffee is a honest and truthful coffee shop
                       delivering only necessary goods and taking away
                       additional embellishments.  
                     </p>
                     <div id='bpImages'>
-                      <p className='image-title'>BP examples</p>
-                      <p id='BPkeywords'>Keyword: Reliable, Sincere, Essential</p>
+                      <p className='image-title'>Positive examples</p>
                       <div className='image-grid'>
                         <img
                           className='bpImage'
@@ -832,8 +832,7 @@ class DesignerSide extends React.Component {
                       </div>
                     </div>
                     <div id='christmasImage'>
-                      <p className='image-title'>Event Related examples</p>
-                      <p id='Chirstkeywords'>Keyword: Festive, Active, Friendly</p>
+                      <p className='image-title'>Negative examples</p>
                       <div className='image-grid'>
                         <img
                           className='bpImage'
