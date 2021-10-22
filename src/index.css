@@ -6,15 +6,19 @@
   font-family: "Noto Sans KR", sans-serif;
 }
 
-h2 {
+h3 {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
 }
 
 p {
   font-family: "Poppins", sans-serif;
+  font-size: 10pt;
 }
 
+div.left-panel {
+  width: 500;
+}
 .color-line {
   display: flex;
   flex-direction: row;
@@ -26,32 +30,12 @@ p {
   margin-right: 10px;
 }
 
-#dseigner-side-scores {
-  margin-left: 15px;
-}
-
-ul {
-  list-style-type: none;
-  padding-left: 2px;
-}
-
-li {
-  font-size: 12pt;
-  padding-bottom: 0.5rem;
-}
-
-li.alarm {
-  font-size: 14pt;
-  color: red;
-  font-weight: 500;
-}
-
 .designer-buttons,
 .user-buttons {
   margin: 7px;
-  width: 300px;
-  height: 50px;
-  font-size: 14pt;
+  width: 200px;
+  height: 20px;
+  font-size: 12pt;
   font-family: "Poppins", sans-serif;
   font-weight: 300;
 }
@@ -73,8 +57,8 @@ li.alarm {
 .text-input,
 .motif-input {
   display: flex;
-  width: 75px;
-  height: 70px;
+  width: 60px;
+  height: 55px;
   margin: 2px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
@@ -84,8 +68,8 @@ li.alarm {
 
 .vector-input {
   display: flex;
-  width: 55px;
-  height: 60px;
+  width: 45px;
+  height: 50px;
   margin: 2px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
@@ -112,4 +96,13 @@ p.image-title,
 p.BPkeywords {
   font-size: 16pt;
   font-weight: 600;
+}
+
+p.score-group-title {
+  font-weight: 600;
+}
+
+p.feedback-description {
+  font-family: "Noto Sans KR", sans-serif;
+  color: blue;
 }

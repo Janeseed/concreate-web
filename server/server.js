@@ -30,6 +30,10 @@ io.on('connection', socket =>{
     io.emit('requestedFeedback', data);
     console.log('requestedFeedback');
   });
+  socket.on('sendAssessment', data => {
+    io.emit('getAssessment', data);
+    console.log('getAssessment');
+  });
   socket.on('sendDataURL', data => {
     io.emit('sendDataURL', data);
     console.log('sendDataURL');
