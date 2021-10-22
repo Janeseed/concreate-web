@@ -100,14 +100,13 @@ class EndUser extends React.Component {
     const store = this.store;
     const socket = this.socket;
 
-    socket.on('requestedFeedback', () => {
-      //data에 json 파일 보내기
-      //가능하면 data에 이미지 파일도 같이 넣어서 보내기
+    socket.on('requestedFeedback', data => {
+      console.log('requestedFeedback');
+      this.setState({jsonFromDesigner: data, IsChanged: true});
     });
 
     socket.on('sendDataURL', data => {
-      // data를 어레이에 담아서 받기
-      // 각 이미지 소스를 setstate하기
+      this.setState({imgSrcURL: data});
     });
 
   }
@@ -116,7 +115,14 @@ class EndUser extends React.Component {
     const store = this.store;
     const socket = this.socket;
 
-    //이후에 async function들 여기에 넣기
+    socket.on('requestedFeedback', data => {
+      console.log('requestedFeedback');
+      this.setState({jsonFromDesigner: data, IsChanged: true});
+    });
+
+    socket.on('sendDataURL', data => {
+      this.setState({imgSrcURL: data});
+    });
   }
 
   render() {
@@ -832,7 +838,8 @@ class EndUser extends React.Component {
               <Button
                 className="user-buttons"
                 onClick={() => {
-                  const requestJson   
+                  const requestJson = store.toJSON();
+                  socket.emit('request', requestJson);
                 }}
               >
                 Request
@@ -852,7 +859,7 @@ class EndUser extends React.Component {
                       className = 'user-buttons'
                       onClick={() => {
                         store.loadJSON(this.state.jsonFromDesigner, true);
-                        this.setState({IsChanged: !this.state.IsChanged});
+                        this.setState({IsChanged: false});
                     }}>
                       Apply
                     </Button>

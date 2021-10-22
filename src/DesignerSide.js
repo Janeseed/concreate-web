@@ -109,7 +109,7 @@ class DesignerSide extends React.Component {
     const store = this.store;
     const socket = this.socket;
     
-    socket.on('requestedJson', data => {
+    socket.on('sendRequest', data => {
       store.loadJSON(data, true);
     });
   };
@@ -118,7 +118,7 @@ class DesignerSide extends React.Component {
     const store = this.store;
     const socket = this.socket;
 
-    socket.on('requestedJson', data => {
+    socket.on('sendRequest', data => {
       store.loadJSON(data, true);
     });
   }
@@ -835,21 +835,13 @@ class DesignerSide extends React.Component {
             <Button
               className="designer-buttons"
               onClick={() => {
-                socket.emit('requestJson');
-              }}
-            >
-              GET
-            </Button>
-            <Button
-              className="designer-buttons"
-              onClick={() => {
                 const sendJson = store.toJSON();
 
                 const maxWidth = 200;
                 const scale = maxWidth / store.width;
                 const imageBase64 = store.toDataURL({ pixelRatio: scale });
                 
-                socket.emit('sendJson', sendJson);
+                socket.emit('sendFeedback', sendJson);
                 socket.emit('sendDataURL', imageBase64);
               }}
             >

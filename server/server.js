@@ -22,12 +22,12 @@ io.on('connection', socket =>{
     io.emit('sendRequest', data);
     console.log('sendRequest');
   });
-  socket.on('sendFeedback', data => { // data: desinger가 보낸 json 파일 + feedback data(json 파일 형식)
+  socket.on('sendFeedback', data => { // data: desinger가 보낸 json 파일
     // fs.writeFile('./get.json', JSON.stringify(data), (err) => {
     //   if (err) throw err;
     // });
     // console.log('requested json saved');
-    io.emit('requestedFeeback', data);
+    io.emit('requestedFeedback', data);
     console.log('requestedFeedback');
   });
   socket.on('sendDataURL', data => {
