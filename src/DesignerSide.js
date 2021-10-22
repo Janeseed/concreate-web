@@ -47,14 +47,11 @@ const shapes9 =  process.env.PUBLIC_URL + 'shapes-14.svg';
 const shapes10 =  process.env.PUBLIC_URL + 'shapes-15.svg';
 const shapes11 =  process.env.PUBLIC_URL + 'shapes-16.svg';
 
-//import image url
-const bpImage1 = process.env.PUBLIC_URL + '174.jpg';
-const bpImage2 = process.env.PUBLIC_URL + '246.jpg';
-const bpImage3 = process.env.PUBLIC_URL + '279.jpg';
-
-const christImage1 = process.env.PUBLIC_URL + '076.jpg';
-const christImage2 = process.env.PUBLIC_URL + '209.jpg';
-const christImage3 = process.env.PUBLIC_URL + '226.jpg';
+//import images
+const moodImage1 = process.env.PUBLIC_URL + '/jeongSeon_Incheon.jpg';
+const moodImage2 = process.env.PUBLIC_URL + '/jeongseon.jpg';
+const moodImage3 = process.env.PUBLIC_URL + '/coffee_bean_pattern.png';
+const moodImage4 = process.env.PUBLIC_URL + '/baekJa.png';
 
 class DesignerSide extends React.Component {
   constructor(props) {
@@ -62,10 +59,10 @@ class DesignerSide extends React.Component {
     this.state = {
       brandPersonalityKeywords: ['Truthful', 'Sincere', 'Comfortable'],
       backgroundColor: '#ffffff',
-      colors: ['#414042', "#6d6e71", '#939598', '#bcbec0', '#e6e7e8', '#ffffff',
-        '#8f4f16', '#bf6a1e', "#db863c", '#e8a061', '#f5b682', '#ffffff',
-        '#c98d46', '#e6b277', '#ebc192', '#f2d3b1', '#f2e2d0', '#ffffff',
-        '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0', '#ffffff',
+      colors: ['#414042', "#6d6e71", '#939598', '#bcbec0', '#e6e7e8', '#fffffe',
+        '#8f4f16', '#bf6a1e', "#db863c", '#e8a061', '#f5b682', '#fffeff',
+        '#c98d46', '#e6b277', '#ebc192', '#f2d3b1', '#f2e2d0', '#fefff',
+        '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0', '#fffffd',
         '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505', '#ffffff'],
       colorBrightness: 0,
       colorSaturation: 0,
@@ -115,16 +112,6 @@ class DesignerSide extends React.Component {
     socket.on('requestedJson', data => {
       store.loadJSON(data, true);
     });
-    socket.on('show', data => {
-      this.setState({
-        textSizeMax: data.textResult.maxText,
-        textSizeMin: data.textResult.minText,
-        checkTextMax: data.textResult.checkMax,
-        checkTextMin: data.textResult.checkMin,
-        negativeSpace: data.negativeSpace.NSpercent,
-        checkNegativeSpace: data.negativeSpace.checkNS,
-      });
-    });
   };
 
   componentWillUnmount() {
@@ -133,16 +120,6 @@ class DesignerSide extends React.Component {
 
     socket.on('requestedJson', data => {
       store.loadJSON(data, true);
-    });
-    socket.on('show', data => {
-      this.setState({
-        textSizeMax: data.textResult.maxText,
-        textSizeMin: data.textResult.minText,
-        checkTextMax: data.textResult.checkMax,
-        checkTextMin: data.textResult.checkMin,
-        negativeSpace: data.negativeSpace.NSpercent,
-        checkNegativeSpace: data.negativeSpace.checkNS,
-      });
     });
   }
 
@@ -806,48 +783,44 @@ class DesignerSide extends React.Component {
                 content={
                   <div>
                     <p className='BPkeywords'>Keyword: Reliable, Sincere, Essential</p>
+                    <p className='BPdescriptionKR'>
+                      무위커피는 '무위자연'의 무위를 따온 것으로,
+                      꾸밈없이 꼭 필요한 것만 정성스럽게 담아낸다는
+                      무위의 커피에 대한 정직함과 신뢰를 의미합니다.  
+                    </p>
                     <p className='BPdescription'>
                       Muwie Coffee is a honest and truthful coffee shop
                       delivering only necessary goods and taking away
                       additional embellishments.  
                     </p>
                     <div id='bpImages'>
-                      <p className='image-title'>Positive examples</p>
+                      <p className='image-title'>Mood Board of Muwie</p>
+                      <p className='BPdescriptionKR'>
+                      정선의 풍경화와 조선 달항아리 백자처럼 비움의 미학을 닮고자 한다.
+                      <br></br>
+                      전체적인 브랜드의 상품들은 모두 손수 만든 듯한 느낌으로
+                      정성을 표현할 수 있는 방식으로 전달한다.  
+                      </p>
                       <div className='image-grid'>
                         <img
                           className='bpImage'
                           height='250'
-                          src={bpImage1}
+                          src={moodImage1}
                         />
                         <img
                           className='bpImage'
                           height='250'
-                          src={bpImage2}
+                          src={moodImage2}
                         />
                         <img
                           className='bpImage'
                           height='250'
-                          src={bpImage3}
-                        />
-                      </div>
-                    </div>
-                    <div id='christmasImage'>
-                      <p className='image-title'>Negative examples</p>
-                      <div className='image-grid'>
-                        <img
-                          className='bpImage'
-                          height='250'
-                          src={christImage1}
+                          src={moodImage3}
                         />
                         <img
                           className='bpImage'
                           height='250'
-                          src={christImage2}
-                        />
-                        <img
-                          className='bpImage'
-                          height='250'
-                          src={christImage3}
+                          src={moodImage4}
                         />
                       </div>
                     </div>
@@ -882,20 +855,6 @@ class DesignerSide extends React.Component {
             >
               SEND
             </Button>
-            <div id="designer-score-section">
-              <h2>Numeric User Data</h2>
-              <div id="dseigner-side-scores">
-                <h3>text</h3>
-                <ul>
-                  {this.state.checkTextMax ? <li>Max text size: {this.state.textSizeMax} pt</li> : <li className='alarm'>Max text size: OUT OF BP</li>}
-                  {this.state.checkTextMin ? <li>Min text size: {this.state.textSizeMin} pt</li> : <li className='alarm'>Min text size: OUT OF BP</li>}
-                </ul>
-                <h3>layout</h3>
-                <ul>
-                  {this.state.checkNegativeSpace? <li>Negative Space: {this.state.negativeSpace} %</li> : <li className='alarm'>Negative Space: OUT OF BP</li>}
-                </ul>
-              </div>
-            </div>
 
           </>
         );
