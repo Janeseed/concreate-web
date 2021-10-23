@@ -15,7 +15,7 @@ export const SvgToolbar = observer(({store}) => {
   '#3d3504', '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505'];
   return (
     <Navbar.Group align={Alignment.LEFT}>
-      {/* {!element.maskSrc &&
+      {!element.maskSrc &&
         element.colors.slice(0, 5).map((original) => {
           return(
             <Popover2
@@ -39,7 +39,7 @@ export const SvgToolbar = observer(({store}) => {
               />
             </Popover2>
           );
-      })} */}
+      })}
     </Navbar.Group>
   );
 });

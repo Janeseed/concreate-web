@@ -15,22 +15,28 @@ var io = require('socket.io')(server,{
     credentials: true
   }
 })
-
+var count = 0
 io.on('connection', socket =>{
   console.log("New client connected");
   socket.on('request', data => { //data: user가 보낸 json 파일
+    fs.writeFile(`./request-${count}.json`, JSON.stringify(data), err => {
+      if (err) throw err;
+    });
     io.emit('sendRequest', data);
     console.log('sendRequest');
   });
   socket.on('sendFeedback', data => { // data: desinger가 보낸 json 파일
-    // fs.writeFile('./get.json', JSON.stringify(data), (err) => {
-    //   if (err) throw err;
-    // });
-    // console.log('requested json saved');
+    fs.writeFile(`./feedback-${count}.json`, JSON.stringify(data), (err) => {
+      if (err) throw err;
+    });
     io.emit('requestedFeedback', data);
     console.log('requestedFeedback');
   });
-  socket.on('sendAssessment', data => {
+  socket.on('sendAssessment', data => { // data: desinger가 user한테 보낸 점수와 피드백
+    fs.writeFile(`./score-${count}.json`, JSON.stringify(data), (err) => {
+      if (err) throw err;
+    });
+    count ++;
     io.emit('getAssessment', data);
     console.log('getAssessment');
   });

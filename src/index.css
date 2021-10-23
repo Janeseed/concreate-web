@@ -33,7 +33,18 @@ div.left-panel {
 .designer-buttons,
 .user-buttons {
   margin: 7px;
-  width: 200px;
+  width: 150px;
+  height: 20px;
+  font-size: 12pt;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+}
+
+.finish-button {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 150px;
   height: 20px;
   font-size: 12pt;
   font-family: "Poppins", sans-serif;
