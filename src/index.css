@@ -19,6 +19,7 @@ p {
 div.left-panel {
   width: 500;
 }
+
 .color-line {
   display: flex;
   flex-direction: row;
@@ -28,6 +29,10 @@ div.left-panel {
 
 .color-line-title {
   margin-right: 10px;
+}
+
+.score-group {
+  margin-top: 15px;
 }
 
 .designer-buttons,

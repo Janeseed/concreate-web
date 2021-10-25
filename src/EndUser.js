@@ -54,6 +54,7 @@ const moodImage1 = process.env.PUBLIC_URL + '/jeongSeon_Incheon.jpg';
 const moodImage2 = process.env.PUBLIC_URL + '/jeongseon.jpg';
 const moodImage3 = process.env.PUBLIC_URL + '/coffee_bean_pattern.png';
 const moodImage4 = process.env.PUBLIC_URL + '/baekJa.png';
+const colorPalette = process.env.PUBLIC_URL + './color_palette.png';
 
 const colorDescription = process.env.PUBLIC_URL + './colorDescription.png';
 const compositionDescription = process.env.PUBLIC_URL + './compositionDescription.png';
@@ -67,9 +68,9 @@ class EndUser extends React.Component {
       brandPersonalityKeywords: ['Truthful', 'Sincere', 'Comfortable'],
       backgroundColor: '#ffffff',
       colors: ['#414042', "#6d6e71", '#939598', '#bcbec0', '#e6e7e8', '#ffffff',
+        '#131f2b', '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0',
         '#703a0d','#8f4f16', '#bf6a1e', "#db863c", '#e8a061', '#f5b682',
         '#a86722', '#c98d46', '#e6b277', '#ebc192', '#f2d3b1', '#f2e2d0',
-        '#131f2b', '#283747','#485a6f','#687f9c', '#849ebd', '#a9c1e0',
         '#3d3504', '#594f0a','#81720f','#b09d25', '#d1bc3a', '#f2df68', '#050505'],
       imgSrcURL: null,
       jsonFromDesigner: null,
@@ -558,7 +559,7 @@ class EndUser extends React.Component {
                           store.activePage.addElement({
                             type: 'svg',
                             src: shapes2,
-                            keepRatio: true,
+                            keepRatio: false,
                             x: pos.x,
                             y: pos.y,
                             width: 98,
@@ -761,8 +762,8 @@ class EndUser extends React.Component {
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
-                            width: 7,
-                            height: 95,
+                            width: 60,
+                            height: 86,
                           })
                         })
                       }}
@@ -823,18 +824,22 @@ class EndUser extends React.Component {
             <h3>Brand Personality</h3>
             <Popover2
               content={
-                <div>
+                <Box sx={{padding: 2}}>
                   <p className='BPkeywords'>Keyword: Reliable, Sincere, Essential</p>
                   <p className='BPdescriptionKR'>
                     무위커피는 '무위자연'의 무위를 따온 것으로,
                     꾸밈없이 꼭 필요한 것만 정성스럽게 담아낸다는
                     무위의 커피에 대한 정직함과 신뢰를 의미합니다.  
                   </p>
-                  <p className='BPdescription'>
-                    Muwie Coffee is a honest and truthful coffee shop
-                    delivering only necessary goods and taking away
-                    additional embellishments.  
+                  <p className='BPkeywords'>Color of Muwie</p>
+                  <p className='BPdescriptionKR'>
+                    무위커피의 Primary Color는 정선의 풍경화에서 찾을 수 있는 채도 낮은 푸른색과 먹색입니다.<br></br>
+                    이를 꾸며줄 수 있는 Secondary Color로 커피와 차의 따뜻함을 느낄 수 있는 3가지 색상이 있습니다.  
                   </p>
+                  <img
+                    className='bpImage'
+                    src={colorPalette}
+                  />
                   <div id='bpImages'>
                     <p className='image-title'>Mood Board of Muwie</p>
                     <p className='BPdescriptionKR'>
@@ -866,7 +871,7 @@ class EndUser extends React.Component {
                       />
                     </div>
                   </div>
-                </div>
+                </Box>
               }
               placement='auto'
             >
@@ -909,7 +914,7 @@ class EndUser extends React.Component {
               </div>
             </div>
             <div>
-              <div className='score-group'>
+              <Box sx={{padding: 1}}>
                 <Stack direction ='row' spacing={2}>
                   <p className='score-group-title'>Color</p>
                   <Popover2
@@ -955,8 +960,8 @@ class EndUser extends React.Component {
                   </div>
                 </Stack>
                 <p className='feedback-description'>{score.feedbackColor}</p>
-              </div>
-              <div className='score-group'>
+              </Box>
+              <Box sx={{padding: 1}}>
                 <Stack direction ='row' spacing={2}>
                   <p className='score-group-title'>Text</p>
                   <Popover2
@@ -986,8 +991,8 @@ class EndUser extends React.Component {
                   </Stack>
                 </Stack>
                 <p className='feedback-description'>{score.feedbackText}</p>
-              </div>
-              <div className='score-group'>
+              </Box>
+              <Box sx={{padding: 1}}>
                 <Stack direction ='row' spacing={2}>
                   <p className='score-group-title'>Object Form</p>
                   <Popover2
@@ -1017,8 +1022,8 @@ class EndUser extends React.Component {
                   </Stack>
                 </Stack>
                 <p className='feedback-description'>{score.feedbackForm}</p>
-              </div>
-              <div className='score-group'>
+              </Box>
+              <Box sx={{padding: 1}}>
                 <Stack direction ='row' spacing={2}>
                   <p className='score-group-title'>Composition</p>
                   <Popover2
@@ -1070,7 +1075,7 @@ class EndUser extends React.Component {
                   </div>
                 </Stack>
                 <p className='feedback-description'>{score.feedbackLayout}</p>
-              </div>
+              </Box>
             </div>
           </div>
         </Box>
