@@ -37,17 +37,17 @@ const KRbodyURL = process.env.PUBLIC_URL + 'text-04.svg';
 const ENGtitleURL = process.env.PUBLIC_URL + 'text-05.svg';
 const ENGbodyURL = process.env.PUBLIC_URL + 'text-06.svg';
 
-const shapes1 =  process.env.PUBLIC_URL + 'shapes-06.svg';
-const shapes2 =  process.env.PUBLIC_URL + 'shapes-07.svg';
-const shapes3 =  process.env.PUBLIC_URL + 'shapes-08.svg';
-const shapes4 =  process.env.PUBLIC_URL + 'shapes-09.svg';
-const shapes5 =  process.env.PUBLIC_URL + 'shapes-10.svg';
-const shapes6 =  process.env.PUBLIC_URL + 'shapes-11.svg';
-const shapes7 =  process.env.PUBLIC_URL + 'shapes-12.svg';
-const shapes8 =  process.env.PUBLIC_URL + 'shapes-13.svg';
-const shapes9 =  process.env.PUBLIC_URL + 'shapes-14.svg';
-const shapes10 =  process.env.PUBLIC_URL + 'shapes-15.svg';
-const shapes11 =  process.env.PUBLIC_URL + 'shapes-16.svg';
+const shapes1 =  process.env.PUBLIC_URL + 'shapes-01.svg';
+const shapes2 =  process.env.PUBLIC_URL + 'shapes-02.svg';
+const shapes3 =  process.env.PUBLIC_URL + 'shapes-03.svg';
+const shapes4 =  process.env.PUBLIC_URL + 'shapes-04.svg';
+const shapes5 =  process.env.PUBLIC_URL + 'shapes-05.svg';
+const shapes6 =  process.env.PUBLIC_URL + 'shapes-06.svg';
+const shapes7 =  process.env.PUBLIC_URL + 'shapes-07.svg';
+const shapes8 =  process.env.PUBLIC_URL + 'shapes-08.svg';
+const shapes9 =  process.env.PUBLIC_URL + 'shapes-09.svg';
+const shapes10 =  process.env.PUBLIC_URL + 'shapes-10.svg';
+const shapes11 =  process.env.PUBLIC_URL + 'shapes-11.svg';
 
 //import images
 const moodImage1 = process.env.PUBLIC_URL + '/jeongSeon_Incheon.jpg';
@@ -587,8 +587,8 @@ class EndUser extends React.Component {
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
-                            width: 110,
-                            height: 95.26,
+                            width: 105,
+                            height: 100,
                           })
                         })
                       }}
@@ -650,6 +650,31 @@ class EndUser extends React.Component {
                   <div className='vector-input'>
                     <img
                       height='40'
+                      src = {shapes6}
+                      draggable = "true"
+                      onDragStart={() => {
+                        unstable_registerNextDomDrop((pos, element) => {
+                          // "pos" - is relative mouse position of drop
+                          // "element" - is element from your store in case when DOM object is dropped on another element
+                          store.activePage.addElement({
+                            type: 'svg',
+                            src: shapes6,
+                            keepRatio: false,
+                            x: pos.x,
+                            y: pos.y,
+                            width: 104,
+                            height: 104,
+                          })
+                        })
+                      }}
+                      onDragEnd={() => {
+                        unstable_registerNextDomDrop(null);
+                      }}
+                    />
+                  </div>
+                  <div className='vector-input'>
+                    <img
+                      height='40'
                       src = {shapes7}
                       draggable = "true"
                       onDragStart={() => {
@@ -662,8 +687,8 @@ class EndUser extends React.Component {
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
-                            width: 104,
-                            height: 104,
+                            width: 98,
+                            height: 98,
                           })
                         })
                       }}
@@ -687,8 +712,8 @@ class EndUser extends React.Component {
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
-                            width: 98,
-                            height: 98,
+                            width: 105,
+                            height: 100,
                           })
                         })
                       }}
@@ -712,8 +737,8 @@ class EndUser extends React.Component {
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
-                            width: 110,
-                            height: 95.26,
+                            width: 105,
+                            height: 100,
                           })
                         })
                       }}
@@ -737,8 +762,8 @@ class EndUser extends React.Component {
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
-                            width: 105,
-                            height: 100,
+                            width: 60,
+                            height: 86,
                           })
                         })
                       }}
@@ -759,31 +784,6 @@ class EndUser extends React.Component {
                           store.activePage.addElement({
                             type: 'svg',
                             src: shapes11,
-                            keepRatio: false,
-                            x: pos.x,
-                            y: pos.y,
-                            width: 60,
-                            height: 86,
-                          })
-                        })
-                      }}
-                      onDragEnd={() => {
-                        unstable_registerNextDomDrop(null);
-                      }}
-                    />
-                  </div>
-                  <div className='vector-input'>
-                    <img
-                      height='40'
-                      src = {shapes6}
-                      draggable = "true"
-                      onDragStart={() => {
-                        unstable_registerNextDomDrop((pos, element) => {
-                          // "pos" - is relative mouse position of drop
-                          // "element" - is element from your store in case when DOM object is dropped on another element
-                          store.activePage.addElement({
-                            type: 'svg',
-                            src: shapes6,
                             keepRatio: false,
                             x: pos.x,
                             y: pos.y,
@@ -843,10 +843,10 @@ class EndUser extends React.Component {
                   <div id='bpImages'>
                     <p className='image-title'>Mood Board of Muwie</p>
                     <p className='BPdescriptionKR'>
-                    정선의 풍경화와 조선 달항아리 백자처럼 비움의 미학을 닮고자 한다.
+                    정선의 풍경화와 조선 달항아리 백자처럼 비움의 미학을 닮고자 합니다.
                     <br></br>
                     전체적인 브랜드의 상품들은 모두 손수 만든 듯한 느낌으로
-                    정성을 표현할 수 있는 방식으로 전달한다.  
+                    정성을 표현할 수 있는 방식으로 전달합니다.  
                     </p>
                     <div className='image-grid'>
                       <img
